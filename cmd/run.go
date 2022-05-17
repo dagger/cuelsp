@@ -5,9 +5,11 @@ import (
 	"fmt"
 
 	"github.com/dagger/dlsp/logger"
+	"github.com/dagger/dlsp/lsp"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	glspserv "github.com/tliron/glsp/server"
 )
 
 var runCmd = &cobra.Command{
@@ -41,24 +43,26 @@ var runCmd = &cobra.Command{
 func Run(ctx context.Context, protocol string, address string) error {
 	lg := log.Ctx(ctx)
 	lg.Info().Msg("starting LSP with protocol " + protocol + " at address " + address)
-	// server := serverpkg.NewServer(&tosca.Handler, toolName, verbose > 0)
+
+	// make it more configurable afterward !!!!!!!
+	server := glspserv.NewServer(&lsp.Handler, "dagger-lsp", true) ///////////////////
 
 	switch protocol {
 	case "stdio":
-		return fmt.Errorf("stdio-tata")
-		// return server.RunStdio()
+		// return fmt.Errorf("stdio-tata")
+		return server.RunStdio()
 
 	case "tcp":
-		return fmt.Errorf("tcp-tata")
-		// return server.RunTCP(address)
+		// return fmt.Errorf("tcp-tata")
+		return server.RunTCP(address)
 
 	case "websocket":
-		return fmt.Errorf("websocket-tata")
-		// return server.RunWebSocket(address)
+		// return fmt.Errorf("websocket-tata")
+		return server.RunWebSocket(address)
 
 	case "nodejs":
-		return fmt.Errorf("nodejs-tata")
-		// return server.RunNodeJs()
+		// return fmt.Errorf("nodejs-tata")
+		return server.RunNodeJs()
 
 	default:
 		return fmt.Errorf("unsupported protocol: %s", protocol)
