@@ -15,6 +15,8 @@ const lsName = "dlsp"
 var version string = "0.0.1"
 var handler protocol.Handler
 
+var log = logging.GetLogger(lsName)
+
 func main() {
 	// This increases logging verbosity (optional)
 	// logTo := "/tmp/dlsp.log"
@@ -30,11 +32,13 @@ func main() {
 
 	server := server.NewServer(&handler, lsName, false)
 
+	log.Errorf("test1")
 	server.RunStdio()
 }
 
 func initialize(context *glsp.Context, params *protocol.InitializeParams) (interface{}, error) {
 	capabilities := handler.CreateServerCapabilities()
+	log.Errorf("test2")
 
 	if params.Trace != nil {
 		protocol.SetTraceValue(*params.Trace)
@@ -50,15 +54,18 @@ func initialize(context *glsp.Context, params *protocol.InitializeParams) (inter
 }
 
 func initialized(context *glsp.Context, params *protocol.InitializedParams) error {
+	log.Errorf("test3")
 	return nil
 }
 
 func shutdown(context *glsp.Context) error {
+	log.Errorf("test4")
 	protocol.SetTraceValue(protocol.TraceValueOff)
 	return nil
 }
 
 func setTrace(context *glsp.Context, params *protocol.SetTraceParams) error {
+	log.Errorf("test5")
 	protocol.SetTraceValue(params.Value)
 	return nil
 }
