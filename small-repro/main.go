@@ -1,6 +1,7 @@
 package main
 
 import (
+	util "github.com/dagger/dlsp/small-repro/convertor"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 	"github.com/tliron/glsp/server"
@@ -24,25 +25,39 @@ func main() {
 	logging.Configure(2, nil)
 
 	handler = protocol.Handler{
-		Initialize:  initialize,
-		Initialized: initialized,
-		Shutdown:    shutdown,
-		SetTrace:    setTrace,
+		Initialize:            initialize,
+		Initialized:           initialized,
+		Shutdown:              shutdown,
+		SetTrace:              setTrace,
+		TextDocumentDidChange: documentDidChange,
+		TextDocumentDidOpen:   documentDidOpen,
 	}
 
 	server := server.NewServer(&handler, lsName, false)
 
-	log.Errorf("test1")
+	log.Errorf("Run server Stdio")
 	server.RunStdio()
 }
 
 func initialize(context *glsp.Context, params *protocol.InitializeParams) (interface{}, error) {
 	capabilities := handler.CreateServerCapabilities()
-	log.Errorf("test2")
+	change := protocol.TextDocumentSyncKindFull
+	capabilities.TextDocumentSync = protocol.TextDocumentSyncOptions{
+		OpenClose: util.BoolPtr(true),
+		Change:    &change,
+		Save:      util.BoolPtr(true),
+	}
+	capabilities.Workspace = &protocol.ServerCapabilitiesWorkspace{
+		WorkspaceFolders: &protocol.WorkspaceFoldersServerCapabilities{
+			Supported:           util.BoolPtr(true),
+			ChangeNotifications: &protocol.BoolOrString{Value: util.BoolPtr(true)},
+		}}
 
 	if params.Trace != nil {
 		protocol.SetTraceValue(*params.Trace)
 	}
+
+	log.Infof("rootPath: %#v", params.WorkspaceFolders)
 
 	return protocol.InitializeResult{
 		Capabilities: capabilities,
@@ -54,18 +69,35 @@ func initialize(context *glsp.Context, params *protocol.InitializeParams) (inter
 }
 
 func initialized(context *glsp.Context, params *protocol.InitializedParams) error {
-	log.Errorf("test3")
+	log.Errorf("Initialized")
+	log.Errorf("params: %#v", params)
+
+	var result interface{}
+	context.Call("workspace/workspaceFolders", "bar", &result)
+	log.Infof("Result: %#v", result)
 	return nil
 }
 
 func shutdown(context *glsp.Context) error {
-	log.Errorf("test4")
+	log.Errorf("Shutdown")
 	protocol.SetTraceValue(protocol.TraceValueOff)
 	return nil
 }
 
 func setTrace(context *glsp.Context, params *protocol.SetTraceParams) error {
-	log.Errorf("test5")
+	log.Errorf("Set strace")
 	protocol.SetTraceValue(params.Value)
+	return nil
+}
+
+func documentDidChange(ctx *glsp.Context, params *protocol.DidChangeTextDocumentParams) error {
+	log.Infof("Document changed")
+	log.Infof("params: %#v", params)
+	return nil
+}
+
+func documentDidOpen(ctx *glsp.Context, params *protocol.DidOpenTextDocumentParams) error {
+	log.Infof("Document opened")
+	log.Infof("params: %#v", params)
 	return nil
 }
