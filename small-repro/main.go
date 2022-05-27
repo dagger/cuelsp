@@ -2,6 +2,7 @@ package main
 
 import (
 	util "github.com/dagger/dlsp/small-repro/convertor"
+	"github.com/dagger/dlsp/small-repro/workspace"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 	"github.com/tliron/glsp/server"
@@ -13,10 +14,12 @@ import (
 
 const lsName = "dlsp"
 
-var version string = "0.0.1"
-var handler protocol.Handler
-
-var log = logging.GetLogger(lsName)
+var (
+	version string = "0.0.1"
+	handler protocol.Handler
+	wk      *workspace.Workspace
+	log     = logging.GetLogger(lsName)
+)
 
 func main() {
 	// This increases logging verbosity (optional)
@@ -25,21 +28,23 @@ func main() {
 	logging.Configure(2, nil)
 
 	handler = protocol.Handler{
-		Initialize:            initialize,
-		Initialized:           initialized,
-		Shutdown:              shutdown,
-		SetTrace:              setTrace,
-		TextDocumentDidChange: documentDidChange,
-		TextDocumentDidOpen:   documentDidOpen,
+		Initialize:          initialize,
+		Initialized:         initialized,
+		Shutdown:            shutdown,
+		SetTrace:            setTrace,
+		TextDocumentDidSave: documentDidSave,
+		TextDocumentDidOpen: documentDidOpen,
 	}
 
-	server := server.NewServer(&handler, lsName, false)
+	serv := server.NewServer(&handler, lsName, false)
 
 	log.Errorf("Run server Stdio")
-	server.RunStdio()
+	if err := serv.RunStdio(); err != nil {
+		panic(err)
+	}
 }
 
-func initialize(context *glsp.Context, params *protocol.InitializeParams) (interface{}, error) {
+func initialize(_ *glsp.Context, params *protocol.InitializeParams) (interface{}, error) {
 	capabilities := handler.CreateServerCapabilities()
 	change := protocol.TextDocumentSyncKindFull
 	capabilities.TextDocumentSync = protocol.TextDocumentSyncOptions{
@@ -57,7 +62,14 @@ func initialize(context *glsp.Context, params *protocol.InitializeParams) (inter
 		protocol.SetTraceValue(*params.Trace)
 	}
 
-	log.Infof("rootPath: %#v", params.WorkspaceFolders)
+	switch len(params.WorkspaceFolders) {
+	case 0:
+		log.Errorf("No workspace folder found")
+	case 1:
+		wk = workspace.New(util.UriToPath(params.WorkspaceFolders[0].URI))
+	default:
+		log.Errorf("Multiple workspace not suported")
+	}
 
 	return protocol.InitializeResult{
 		Capabilities: capabilities,
@@ -68,36 +80,48 @@ func initialize(context *glsp.Context, params *protocol.InitializeParams) (inter
 	}, nil
 }
 
-func initialized(context *glsp.Context, params *protocol.InitializedParams) error {
-	log.Errorf("Initialized")
-	log.Errorf("params: %#v", params)
+func initialized(_ *glsp.Context, params *protocol.InitializedParams) error {
+	log.Debugf("Initialized")
+	log.Debugf("params: %#v", params)
 
-	var result interface{}
-	context.Call("workspace/workspaceFolders", "bar", &result)
-	log.Infof("Result: %#v", result)
 	return nil
 }
 
-func shutdown(context *glsp.Context) error {
-	log.Errorf("Shutdown")
+func shutdown(_ *glsp.Context) error {
+	log.Debugf("Shutdown")
 	protocol.SetTraceValue(protocol.TraceValueOff)
 	return nil
 }
 
-func setTrace(context *glsp.Context, params *protocol.SetTraceParams) error {
-	log.Errorf("Set strace")
+func setTrace(_ *glsp.Context, params *protocol.SetTraceParams) error {
+	log.Debugf("Set strace")
 	protocol.SetTraceValue(params.Value)
 	return nil
 }
 
-func documentDidChange(ctx *glsp.Context, params *protocol.DidChangeTextDocumentParams) error {
-	log.Infof("Document changed")
-	log.Infof("params: %#v", params)
+func documentDidSave(_ *glsp.Context, params *protocol.DidSaveTextDocumentParams) error {
+	log.Debugf("Document saved")
+	log.Debugf("params: %#v", params)
+
+	p, err := wk.GetPlan(util.UriToPath(params.TextDocument.URI))
+	if err != nil {
+		return err
+	}
+
+	if err := p.Reload(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func documentDidOpen(ctx *glsp.Context, params *protocol.DidOpenTextDocumentParams) error {
-	log.Infof("Document opened")
-	log.Infof("params: %#v", params)
+func documentDidOpen(_ *glsp.Context, params *protocol.DidOpenTextDocumentParams) error {
+	log.Debugf("Document opened: %s", params.TextDocument.URI)
+	log.Debugf("params: %#v", params)
+
+	if err := wk.AddPlan(util.UriToPath(params.TextDocument.URI)); err != nil {
+		return err
+	}
+
 	return nil
 }
