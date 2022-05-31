@@ -16,51 +16,76 @@ type Plan struct {
 	// Plan's kind
 	kind Kind
 
+	// Plan's instance
+	instance *loader.Instance
+
 	// Cue Value
 	v cue.Value
+
+	// Definitions of a plan and his imported package
+	defs map[string]cue.Value
 }
 
 // New load a new cue value
 func New(root, file string) (*Plan, error) {
-	v, err := loader.Dir(root, file)
 	k := Directory
+	i, err := loader.Dir(root, file)
+
 	if err != nil {
-		v2, err2 := loader.File(root, file)
-		if err2 != nil {
+		i, err = loader.File(root, file)
+		if err != nil {
 			return nil, err
 		}
 
 		k = File
-		v = v2
+	}
+
+	v, err := i.GetValue()
+	if err != nil {
+		return nil, err
 	}
 
 	// Load cue value
 	return &Plan{
-		root: root,
-		file: file,
-		kind: k,
-		v:    v,
+		root:     root,
+		file:     file,
+		kind:     k,
+		instance: i,
+		v:        v,
 	}, nil
+}
+
+// LoadDefs will explore plan's value and list all definitions contained
+// in current values and imported packages
+func (p *Plan) LoadDefs() error {
+	return nil
 }
 
 // Reload will rebuild the cue value
 func (p *Plan) Reload() error {
 	var (
+		i   *loader.Instance
 		v   cue.Value
 		err error
 	)
 
 	switch p.kind {
 	case File:
-		v, err = loader.File(p.root, p.file)
+		i, err = loader.File(p.root, p.file)
 	case Directory:
-		v, err = loader.Dir(p.root, p.file)
+		i, err = loader.Dir(p.root, p.file)
 	}
 
 	if err != nil {
 		return err
 	}
 
+	v, err = i.GetValue()
+	if err != nil {
+		return err
+	}
+
+	p.instance = i
 	p.v = v
 	return nil
 }
