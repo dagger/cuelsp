@@ -6,23 +6,21 @@ import (
 	"path"
 	"path/filepath"
 
-	"cuelang.org/go/cue"
-	"cuelang.org/go/cue/cuecontext"
 	cueload "cuelang.org/go/cue/load"
 )
 
-// Dir load a cue value from a directory
-func Dir(src, file string) (cue.Value, error) {
+// Dir load a cue instance from a directory
+func Dir(src, file string) (*Instance, error) {
 	return Build(src, nil, "./"+filepath.Dir(file))
 }
 
-// File load a cue value from a single file
-func File(src, file string) (cue.Value, error) {
+// File load a cue instance from a single file
+func File(src, file string) (*Instance, error) {
 	return Build(src, nil, file)
 }
 
-// Build a cue configuration tree from the files in fs.
-func Build(src string, overlays map[string]fs.FS, file string) (cue.Value, error) {
+// Build a cue instance from the files in fs.
+func Build(src string, overlays map[string]fs.FS, file string) (*Instance, error) {
 	buildConfig := &cueload.Config{
 		Dir:     src,
 		Overlay: map[string]cueload.Source{},
@@ -55,24 +53,20 @@ func Build(src string, overlays map[string]fs.FS, file string) (cue.Value, error
 			return nil
 		})
 		if err != nil {
-			return cue.Value{}, err
+			return nil, err
 		}
 	}
 	instances := cueload.Instances([]string{file}, buildConfig)
 
 	instance := instances[0]
 	if err := instance.Err; err != nil {
-		return cue.Value{}, err
+		return nil, err
 	}
 
-	cuectx := cuecontext.New()
-	v := cuectx.BuildInstance(instance)
-	if err := v.Err(); err != nil {
-		return cue.Value{}, err
-	}
-	if err := v.Validate(); err != nil {
-		return cue.Value{}, err
+	i := &Instance{instance}
+	if err := i.Validate(); err != nil {
+		return nil, err
 	}
 
-	return v, nil
+	return i, nil
 }
