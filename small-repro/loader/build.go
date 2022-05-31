@@ -63,7 +63,7 @@ func Build(src string, overlays map[string]fs.FS, file string) (*Instance, error
 		return nil, err
 	}
 
-	i := &Instance{instance}
+	i := NewInstance(instance)
 	if err := i.Validate(); err != nil {
 		return nil, err
 	}
