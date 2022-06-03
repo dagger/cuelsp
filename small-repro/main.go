@@ -7,6 +7,7 @@ import (
 	protocol "github.com/tliron/glsp/protocol_3_16"
 	"github.com/tliron/glsp/server"
 	"github.com/tliron/kutil/logging"
+	"go.lsp.dev/uri"
 
 	// Must include a backend implementation. See kutil's logging/ for other options.
 	_ "github.com/tliron/kutil/logging/simple"
@@ -66,7 +67,11 @@ func initialize(_ *glsp.Context, params *protocol.InitializeParams) (interface{}
 	case 0:
 		log.Errorf("No workspace folder found")
 	case 1:
-		wk = workspace.New(util.UriToPath(params.WorkspaceFolders[0].URI))
+		_uri, err := uri.Parse(params.WorkspaceFolders[0].URI)
+		if err != nil {
+			return nil, err
+		}
+		wk = workspace.New(_uri.Filename())
 	default:
 		log.Errorf("Multiple workspace not suported")
 	}
@@ -103,7 +108,12 @@ func documentDidSave(_ *glsp.Context, params *protocol.DidSaveTextDocumentParams
 	log.Debugf("Document saved")
 	log.Debugf("params: %#v", params)
 
-	p, err := wk.GetPlan(util.UriToPath(params.TextDocument.URI))
+	_uri, err := uri.Parse(params.TextDocument.URI)
+	if err != nil {
+		return err
+	}
+
+	p, err := wk.GetPlan(_uri.Filename())
 	if err != nil {
 		return err
 	}
@@ -119,7 +129,12 @@ func documentDidOpen(_ *glsp.Context, params *protocol.DidOpenTextDocumentParams
 	log.Debugf("Document opened: %s", params.TextDocument.URI)
 	log.Debugf("params: %#v", params)
 
-	if err := wk.AddPlan(util.UriToPath(params.TextDocument.URI)); err != nil {
+	_uri, err := uri.Parse(params.TextDocument.URI)
+	if err != nil {
+		return err
+	}
+
+	if err := wk.AddPlan(_uri.Filename()); err != nil {
 		return err
 	}
 
