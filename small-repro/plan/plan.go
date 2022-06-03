@@ -34,16 +34,16 @@ type Plan struct {
 
 // New load a new cue value
 func New(root, file string) (*Plan, error) {
-	k := Directory
-	i, err := loader.Dir(root, file)
+	k := File
+	i, err := loader.File(root, file)
 
 	if err != nil {
-		i, err = loader.File(root, file)
+		i, err = loader.Dir(root, file)
 		if err != nil {
 			return nil, err
 		}
 
-		k = File
+		k = Directory
 	}
 
 	v, err := i.GetValue()
