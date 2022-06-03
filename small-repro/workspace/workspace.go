@@ -61,7 +61,7 @@ func (wk *Workspace) GetPlan(file string) (*plan.Plan, error) {
 	file = wk.trimRootPath(file)
 
 	for _, p := range wk.plans {
-		wk.log.Debugf("compare %s with %s", p.File(), file)
+		wk.log.Debugf("compare %s %s with %s", p.Kind(), p.File(), file)
 		if p.Kind() == plan.File && p.File() == file {
 			return p, nil
 		}
