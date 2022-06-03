@@ -29,12 +29,13 @@ func main() {
 	logging.Configure(2, nil)
 
 	handler = protocol.Handler{
-		Initialize:          initialize,
-		Initialized:         initialized,
-		Shutdown:            shutdown,
-		SetTrace:            setTrace,
-		TextDocumentDidSave: documentDidSave,
-		TextDocumentDidOpen: documentDidOpen,
+		Initialize:             initialize,
+		Initialized:            initialized,
+		Shutdown:               shutdown,
+		SetTrace:               setTrace,
+		TextDocumentDidSave:    documentDidSave,
+		TextDocumentDidOpen:    documentDidOpen,
+		TextDocumentDefinition: documentDefinition,
 	}
 
 	serv := server.NewServer(&handler, lsName, false)
@@ -58,6 +59,7 @@ func initialize(_ *glsp.Context, params *protocol.InitializeParams) (interface{}
 			Supported:           util.BoolPtr(true),
 			ChangeNotifications: &protocol.BoolOrString{Value: util.BoolPtr(true)},
 		}}
+	capabilities.DefinitionProvider = true
 
 	if params.Trace != nil {
 		protocol.SetTraceValue(*params.Trace)
@@ -139,4 +141,13 @@ func documentDidOpen(_ *glsp.Context, params *protocol.DidOpenTextDocumentParams
 	}
 
 	return nil
+}
+
+func documentDefinition(_ *glsp.Context, params *protocol.DefinitionParams) (interface{}, error) {
+	log.Debugf("Jump to def: %s", params.TextDocument.URI)
+	log.Debugf("params: %#v", params)
+
+	// Look up for definition position
+	// Look up for cue value from definition
+	return nil, nil
 }
