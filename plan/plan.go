@@ -3,7 +3,7 @@ package plan
 import (
 	"fmt"
 
-	loader2 "github.com/dagger/dlsp/loader"
+	"github.com/dagger/dlsp/loader"
 	"github.com/tliron/kutil/logging"
 )
 
@@ -19,15 +19,15 @@ type Plan struct {
 	kind Kind
 
 	// Plan's instance
-	instance *loader2.Instance
+	instance *loader.Instance
 
 	// Cue Value
-	v *loader2.Value
+	v *loader.Value
 
 	// Imported packages
 	// We use a map because for performance reason
 	// See https://boltandnuts.wordpress.com/2017/11/20/go-slice-vs-maps/
-	imports map[string]*loader2.Instance
+	imports map[string]*loader.Instance
 
 	log logging.Logger
 }
@@ -35,10 +35,10 @@ type Plan struct {
 // New load a new cue value
 func New(root, file string) (*Plan, error) {
 	k := File
-	i, err := loader2.File(root, file)
+	i, err := loader.File(root, file)
 
 	if err != nil {
-		i, err = loader2.Dir(root, file)
+		i, err = loader.Dir(root, file)
 		if err != nil {
 			return nil, err
 		}
@@ -59,7 +59,7 @@ func New(root, file string) (*Plan, error) {
 		instance: i,
 		v:        v,
 		log:      logging.GetLogger(fmt.Sprintf("plan: %s", file)),
-		imports:  make(map[string]*loader2.Instance),
+		imports:  make(map[string]*loader.Instance),
 	}
 
 	if err := p.loadImports(); err != nil {
@@ -77,7 +77,7 @@ func New(root, file string) (*Plan, error) {
 // in current values and imported packages
 func (p *Plan) loadImports() error {
 	for _, i := range p.instance.Imports {
-		i := loader2.NewInstance(i)
+		i := loader.NewInstance(i)
 		err := i.LoadDefinitions()
 		if err != nil {
 			return err
@@ -94,7 +94,7 @@ func (p *Plan) loadImports() error {
 // TODO(TomChv): Can be optimized with path, for instance
 // - `.#Foo` = definition in current plan
 // - `pkg.#Bar` = definition in package pkg
-func (p *Plan) GetDefinition(path string) (*loader2.Value, error) {
+func (p *Plan) GetDefinition(path string) (*loader.Value, error) {
 	// Look definition in current plan
 	v, _ := p.instance.GetDefinition(path)
 	if v != nil {
@@ -117,16 +117,16 @@ func (p *Plan) GetDefinition(path string) (*loader2.Value, error) {
 // Reload will rebuild the cue value
 func (p *Plan) Reload() error {
 	var (
-		i   *loader2.Instance
-		v   *loader2.Value
+		i   *loader.Instance
+		v   *loader.Value
 		err error
 	)
 
 	switch p.kind {
 	case File:
-		i, err = loader2.File(p.root, p.file)
+		i, err = loader.File(p.root, p.file)
 	case Directory:
-		i, err = loader2.Dir(p.root, p.file)
+		i, err = loader.Dir(p.root, p.file)
 	}
 
 	if err != nil {

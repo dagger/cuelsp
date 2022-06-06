@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	plan2 "github.com/dagger/dlsp/plan"
+	"github.com/dagger/dlsp/plan"
 	"github.com/tliron/kutil/logging"
 )
 
@@ -12,7 +12,7 @@ import (
 type Workspace struct {
 	path  string
 	log   logging.Logger
-	plans []*plan2.Plan
+	plans []*plan.Plan
 }
 
 // New initialize a new workspace in the language server
@@ -36,7 +36,7 @@ func (wk *Workspace) AddPlan(file string) error {
 	file = wk.trimRootPath(file)
 	wk.log.Debugf("Source: %s; File: %s", wk.path, file)
 
-	newPlan, err := plan2.New(wk.path, file)
+	newPlan, err := plan.New(wk.path, file)
 	if err != nil {
 		return err
 	}
@@ -56,16 +56,16 @@ func (wk *Workspace) isPlanLoaded(file string) bool {
 }
 
 // GetPlan return the plan selected at the root
-func (wk *Workspace) GetPlan(file string) (*plan2.Plan, error) {
+func (wk *Workspace) GetPlan(file string) (*plan.Plan, error) {
 	wk.log.Debugf("Call to Get plan: %s", file)
 	file = wk.trimRootPath(file)
 
 	for _, p := range wk.plans {
 		wk.log.Debugf("compare %s %s with %s", p.Kind(), p.File(), file)
-		if p.Kind() == plan2.File && p.File() == file {
+		if p.Kind() == plan.File && p.File() == file {
 			return p, nil
 		}
-		if p.Kind() == plan2.Directory && filepath.Dir(p.File()) == filepath.Dir(file) {
+		if p.Kind() == plan.Directory && filepath.Dir(p.File()) == filepath.Dir(file) {
 			return p, nil
 		}
 	}
