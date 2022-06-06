@@ -3,7 +3,7 @@ package plan
 import (
 	"fmt"
 
-	"github.com/dagger/dlsp/small-repro/loader"
+	loader2 "github.com/dagger/dlsp/loader"
 )
 
 func (p *Plan) Root() string {
@@ -18,11 +18,11 @@ func (p *Plan) Kind() Kind {
 	return p.kind
 }
 
-func (p *Plan) Value() *loader.Value {
+func (p *Plan) Value() *loader2.Value {
 	return p.v
 }
 
-func (p *Plan) Instance() *loader.Instance {
+func (p *Plan) Instance() *loader2.Instance {
 	return p.instance
 }
 
