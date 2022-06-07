@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/dagger/dlsp/convertor"
 	"github.com/dagger/dlsp/workspace"
 	"github.com/tliron/glsp"
@@ -115,9 +117,9 @@ func documentDidSave(_ *glsp.Context, params *protocol.DidSaveTextDocumentParams
 		return err
 	}
 
-	p, err := wk.GetPlan(_uri.Filename())
-	if err != nil {
-		return err
+	p := wk.GetPlan(_uri.Filename())
+	if p == nil {
+		return fmt.Errorf("plan not found")
 	}
 
 	if err := p.Reload(); err != nil {
@@ -147,7 +149,44 @@ func documentDefinition(_ *glsp.Context, params *protocol.DefinitionParams) (int
 	log.Debugf("Jump to def: %s", params.TextDocument.URI)
 	log.Debugf("params: %#v", params)
 
-	// Look up for definition position
-	// Look up for cue value from definition
-	return nil, nil
+	_uri, err := uri.Parse(params.TextDocument.URI)
+	if err != nil {
+		return nil, err
+	}
+
+	p := wk.GetPlan(_uri.Filename())
+	if p == nil {
+		return nil, fmt.Errorf("plan not found")
+	}
+
+	log.Debugf("Pos {%x, %x}", params.Position.Line, params.Position.Character)
+	log.Debugf("Find plan of %s", _uri.Filename())
+	location, err := p.GetDefinition(
+		wk.TrimRootPath(_uri.Filename()),
+		int(params.Position.Line)+1,
+		int(params.Position.Character)+1,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Debugf("Position: %#v", location.Pos().Position())
+
+	res := protocol.Location{
+		URI: fmt.Sprintf("%s", uri.File(location.Pos().Filename())),
+		Range: protocol.Range{
+			Start: protocol.Position{
+				Line:      protocol.UInteger(location.Pos().Line()) - 1,
+				Character: protocol.UInteger(location.Pos().Column()) - 1,
+			},
+			End: protocol.Position{
+				Line:      protocol.UInteger(location.Pos().Line()) - 1,
+				Character: protocol.UInteger(location.Pos().Column()) - 1,
+			},
+		},
+	}
+
+	log.Debugf("Res: %#v", res)
+
+	return res, nil
 }

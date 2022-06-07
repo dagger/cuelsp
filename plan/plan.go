@@ -3,6 +3,8 @@ package plan
 import (
 	"fmt"
 
+	"github.com/dagger/dlsp/file"
+	"github.com/dagger/dlsp/internal"
 	"github.com/dagger/dlsp/loader"
 	"github.com/tliron/kutil/logging"
 )
@@ -10,10 +12,13 @@ import (
 // Plan is a representation of a cue value in a workspace
 type Plan struct {
 	// Root path of the plan
-	root string
+	rootPath string
 
-	// File loaded
-	file string
+	// RootFile path
+	rootFilePath string
+
+	// Files loaded
+	files map[string]*file.File
 
 	// Plan's kind
 	kind Kind
@@ -33,12 +38,16 @@ type Plan struct {
 }
 
 // New load a new cue value
-func New(root, file string) (*Plan, error) {
+func New(root, filePath string) (*Plan, error) {
+	log := logging.GetLogger(fmt.Sprintf("plan: %s", filePath))
+
 	k := File
-	i, err := loader.File(root, file)
+	log.Debugf("Try to load plan as file")
+	i, err := loader.File(root, filePath)
 
 	if err != nil {
-		i, err = loader.Dir(root, file)
+		log.Debugf("Try to load plan as directory")
+		i, err = loader.Dir(root, filePath)
 		if err != nil {
 			return nil, err
 		}
@@ -46,20 +55,31 @@ func New(root, file string) (*Plan, error) {
 		k = Directory
 	}
 
+	log.Debugf("Plan loaded")
+
 	v, err := i.GetValue()
 	if err != nil {
 		return nil, err
 	}
 
+	f, err := file.New(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	files := make(map[string]*file.File)
+	files[filePath] = f
+
 	// Load cue value
 	p := &Plan{
-		root:     root,
-		file:     file,
-		kind:     k,
-		instance: i,
-		v:        v,
-		log:      logging.GetLogger(fmt.Sprintf("plan: %s", file)),
-		imports:  make(map[string]*loader.Instance),
+		rootPath:     root,
+		rootFilePath: filePath,
+		files:        files,
+		kind:         k,
+		instance:     i,
+		v:            v,
+		log:          log,
+		imports:      make(map[string]*loader.Instance),
 	}
 
 	if err := p.loadImports(); err != nil {
@@ -94,24 +114,35 @@ func (p *Plan) loadImports() error {
 // TODO(TomChv): Can be optimized with path, for instance
 // - `.#Foo` = definition in current plan
 // - `pkg.#Bar` = definition in package pkg
-func (p *Plan) GetDefinition(path string) (*loader.Value, error) {
-	// Look definition in current plan
-	v, _ := p.instance.GetDefinition(path)
-	if v != nil {
-		return v, nil
+func (p *Plan) GetDefinition(path string, line, char int) (*loader.Value, error) {
+	p.log.Debugf("Looking for file: %s", path)
+	f, found := p.files[path]
+	if !found {
+		return nil, fmt.Errorf("file not registered")
 	}
 
-	// Look definition in imports
-	for _, i := range p.imports {
-		v, err := i.GetDefinition(path)
-		if err != nil {
-			continue
+	p.log.Debugf("Looking for def in %s at {%d, %d}", path, line, char)
+	def, err := f.Defs().Find(line, char)
+	if err != nil {
+		return nil, err
+	}
+
+	p.log.Debugf("Searching for %s in value", def)
+
+	_def := internal.StringToDef(def)
+
+	p.log.Debugf("%#v", _def)
+	if !_def.IsImported() {
+		// Look definition in current plan
+		return p.instance.GetDefinition(_def.Def())
+	} else {
+		i, found := p.imports[_def.Pkg()]
+		if !found {
+			return nil, fmt.Errorf("imported package %s not registed in plan", _def.Def())
 		}
 
-		return v, nil
+		return i.GetDefinition(_def.Def())
 	}
-
-	return nil, fmt.Errorf("definition %s not found", path)
 }
 
 // Reload will rebuild the cue value
@@ -124,9 +155,9 @@ func (p *Plan) Reload() error {
 
 	switch p.kind {
 	case File:
-		i, err = loader.File(p.root, p.file)
+		i, err = loader.File(p.rootPath, p.rootFilePath)
 	case Directory:
-		i, err = loader.Dir(p.root, p.file)
+		i, err = loader.Dir(p.rootPath, p.rootFilePath)
 	}
 
 	if err != nil {
@@ -149,5 +180,19 @@ func (p *Plan) Reload() error {
 		return err
 	}
 
+	return nil
+}
+
+// AddFile load and register a new file in the plan
+// This file must be part of the instance
+func (p *Plan) AddFile(path string) error {
+	p.log.Debugf("Add a new file to plan: %s", path)
+
+	f, err := file.New(path)
+	if err != nil {
+		return err
+	}
+
+	p.files[path] = f
 	return nil
 }
