@@ -76,7 +76,7 @@ func New(root, filePath string) (*Plan, error) {
 	// Load cue value
 	p := &Plan{
 		rootPath:     root,
-		rootFilePath: filePath,
+		RootFilePath: filePath,
 		files:        files,
 		kind:         k,
 		instance:     i,
@@ -162,9 +162,9 @@ func (p *Plan) Reload() error {
 
 	switch p.kind {
 	case File:
-		i, err = loader.File(p.rootPath, p.rootFilePath)
+		i, err = loader.File(p.rootPath, p.RootFilePath)
 	case Directory:
-		i, err = loader.Dir(p.rootPath, p.rootFilePath)
+		i, err = loader.Dir(p.rootPath, p.RootFilePath)
 	}
 
 	if err != nil {

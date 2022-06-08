@@ -44,5 +44,5 @@ func (p *Plan) String() string {
 		files += fmt.Sprintf("\n%s", f)
 	}
 
-	return fmt.Sprintf("Root: %s/%s Files: %s\nType: %s, Value: %s\n%s\n Imports: %s\n", p.rootPath, p.rootFilePath, files, p.kind, p.v, p.instance, imports)
+	return fmt.Sprintf("Root: %s/%s Files: %s\nType: %s, Value: %s\n%s\n Imports: %s\n", p.rootPath, p.RootFilePath, files, p.kind, p.v, p.instance, imports)
 }
