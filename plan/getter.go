@@ -3,15 +3,20 @@ package plan
 import (
 	"fmt"
 
+	"github.com/dagger/dlsp/file"
 	loader2 "github.com/dagger/dlsp/loader"
 )
 
-func (p *Plan) Root() string {
-	return p.root
+func (p *Plan) RootPath() string {
+	return p.rootPath
 }
 
-func (p *Plan) File() string {
-	return p.file
+func (p *Plan) RootFilePath() string {
+	return p.rootFilePath
+}
+
+func (p *Plan) Files() map[string]*file.File {
+	return p.files
 }
 
 func (p *Plan) Kind() Kind {
@@ -32,5 +37,10 @@ func (p *Plan) String() string {
 		imports += fmt.Sprintf("\n- %s", i)
 	}
 
-	return fmt.Sprintf("Root: %s, File: %s, Type: %s, Value: %s\n%s\n Imports: %s\n", p.root, p.file, p.kind, p.v, p.instance, imports)
+	var files string
+	for _, f := range p.files {
+		files += fmt.Sprintf("\n%s", f)
+	}
+
+	return fmt.Sprintf("Root: %s/%s Files: %s\nType: %s, Value: %s\n%s\n Imports: %s\n", p.rootPath, p.rootFilePath, files, p.kind, p.v, p.instance, imports)
 }
