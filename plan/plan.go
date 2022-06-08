@@ -23,13 +23,13 @@ type Plan struct {
 	// files represents the files loaded
 	files map[string]*file.File
 
-	// Plan's kind
-	kind Kind
+	// Plan's Kind
+	Kind Kind
 
 	// Plan's instance
 	instance *loader.Instance
 
-	// Cue Value
+	// v represents the CUE Value
 	v *loader.Value
 
 	// Imported packages
@@ -78,7 +78,7 @@ func New(root, filePath string) (*Plan, error) {
 		rootPath:     root,
 		RootFilePath: filePath,
 		files:        files,
-		kind:         k,
+		Kind:         k,
 		instance:     i,
 		v:            v,
 		log:          log,
@@ -160,7 +160,7 @@ func (p *Plan) Reload() error {
 		err error
 	)
 
-	switch p.kind {
+	switch p.Kind {
 	case File:
 		i, err = loader.File(p.rootPath, p.RootFilePath)
 	case Directory:

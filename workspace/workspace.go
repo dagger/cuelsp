@@ -56,11 +56,11 @@ func (wk *Workspace) GetPlan(file string) *plan.Plan {
 	file = wk.TrimRootPath(file)
 
 	for _, p := range wk.plans {
-		wk.log.Debugf("compare %s %s with %s", p.Kind(), p.RootFilePath, file)
-		if p.Kind() == plan.File && p.RootFilePath == file {
+		wk.log.Debugf("compare %s %s with %s", p.Kind, p.RootFilePath, file)
+		if p.Kind == plan.File && p.RootFilePath == file {
 			return p
 		}
-		if p.Kind() == plan.Directory && filepath.Dir(p.RootFilePath) == filepath.Dir(file) {
+		if p.Kind == plan.Directory && filepath.Dir(p.RootFilePath) == filepath.Dir(file) {
 			return p
 		}
 	}
