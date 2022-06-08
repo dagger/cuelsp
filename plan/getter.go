@@ -38,6 +38,8 @@ func (p *Plan) String() string {
 	}
 
 	var files string
+	p.muFiles.RLock()
+	defer p.muFiles.RUnlock()
 	for _, f := range p.files {
 		files += fmt.Sprintf("\n%s", f)
 	}

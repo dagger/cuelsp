@@ -2,6 +2,7 @@ package plan
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/dagger/dlsp/file"
 	"github.com/dagger/dlsp/internal"
@@ -15,9 +16,11 @@ type Plan struct {
 	rootPath string
 
 	// RootFile path
-	rootFilePath string
+	RootFilePath string
 
-	// Files loaded
+	// muFiles protects the access to the files map.
+	muFiles sync.RWMutex
+	// files represents the files loaded
 	files map[string]*file.File
 
 	// Plan's kind
@@ -116,8 +119,12 @@ func (p *Plan) loadImports() error {
 // - `pkg.#Bar` = definition in package pkg
 func (p *Plan) GetDefinition(path string, line, char int) (*loader.Value, error) {
 	p.log.Debugf("Looking for file: %s", path)
-	f, found := p.files[path]
-	if !found {
+
+	p.muFiles.RLock()
+	defer p.muFiles.RUnlock()
+
+	f, ok := p.files[path]
+	if !ok {
 		return nil, fmt.Errorf("file not registered")
 	}
 
@@ -192,7 +199,9 @@ func (p *Plan) AddFile(path string) error {
 	if err != nil {
 		return err
 	}
-
+	p.muFiles.Lock()
 	p.files[path] = f
+	p.muFiles.Unlock()
+
 	return nil
 }
