@@ -7,14 +7,14 @@ import (
 	"github.com/tliron/kutil/logging"
 )
 
-// Workspace is a representation of working directory
+// Workspace represents the working directory.
 type Workspace struct {
 	path  string
 	log   logging.Logger
 	plans []*plan.Plan
 }
 
-// New initialize a new workspace in the language server
+// New initializes a new workspace in the language server.
 func New(path string, logger logging.Logger) *Workspace {
 	return &Workspace{
 		path: path,
