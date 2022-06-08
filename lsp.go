@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	util "github.com/dagger/dlsp/convertor"
 	"github.com/dagger/dlsp/workspace"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
@@ -60,14 +59,14 @@ func (s *LSPServer) initialize(_ *glsp.Context, params *protocol.InitializeParam
 
 	capabilities := s.handler.CreateServerCapabilities()
 	capabilities.TextDocumentSync = protocol.TextDocumentSyncOptions{
-		OpenClose: util.BoolPtr(true),
+		OpenClose: boolPtr(true),
 		Change:    &change,
-		Save:      util.BoolPtr(true),
+		Save:      boolPtr(true),
 	}
 	capabilities.Workspace = &protocol.ServerCapabilitiesWorkspace{
 		WorkspaceFolders: &protocol.WorkspaceFoldersServerCapabilities{
-			Supported:           util.BoolPtr(true),
-			ChangeNotifications: &protocol.BoolOrString{Value: util.BoolPtr(true)},
+			Supported:           boolPtr(true),
+			ChangeNotifications: &protocol.BoolOrString{Value: boolPtr(true)},
 		}}
 	capabilities.DefinitionProvider = true
 
@@ -197,4 +196,10 @@ func (s *LSPServer) documentDefinition(_ *glsp.Context, params *protocol.Definit
 	s.log.Debugf("Res: %#v", res)
 
 	return res, nil
+}
+
+// boolPtr convert a boolean to a pointer to boolean
+func boolPtr(v bool) *bool {
+	b := v
+	return &b
 }
