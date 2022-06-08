@@ -12,18 +12,18 @@ import (
 
 // Plan is a representation of a cue value in a workspace
 type Plan struct {
-	// Root path of the plan
+	// rootPath is the plan's root path.
 	rootPath string
 
-	// RootFile path
+	// RootFilePath is the plan's root file path.
 	RootFilePath string
 
 	// muFiles protects the access to the files map.
 	muFiles sync.RWMutex
-	// files represents the files loaded
+	// files store the loaded files.
 	files map[string]*file.File
 
-	// Plan's Kind
+	// Kind stores Plan's Kind.
 	Kind Kind
 
 	// Plan's instance
