@@ -2,6 +2,7 @@ package plan
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/dagger/dlsp/file"
 	"github.com/dagger/dlsp/internal"
@@ -11,22 +12,24 @@ import (
 
 // Plan is a representation of a cue value in a workspace
 type Plan struct {
-	// Root path of the plan
+	// rootPath is the plan's root path.
 	rootPath string
 
-	// RootFile path
-	rootFilePath string
+	// RootFilePath is the plan's root file path.
+	RootFilePath string
 
-	// Files loaded
+	// muFiles protects the access to the files map.
+	muFiles sync.RWMutex
+	// files store the loaded files.
 	files map[string]*file.File
 
-	// Plan's kind
-	kind Kind
+	// Kind stores Plan's Kind.
+	Kind Kind
 
 	// Plan's instance
 	instance *loader.Instance
 
-	// Cue Value
+	// v represents the CUE Value
 	v *loader.Value
 
 	// Imported packages
@@ -67,19 +70,19 @@ func New(root, filePath string) (*Plan, error) {
 		return nil, err
 	}
 
-	files := make(map[string]*file.File)
+	files := map[string]*file.File{}
 	files[filePath] = f
 
 	// Load cue value
 	p := &Plan{
 		rootPath:     root,
-		rootFilePath: filePath,
+		RootFilePath: filePath,
 		files:        files,
-		kind:         k,
+		Kind:         k,
 		instance:     i,
 		v:            v,
 		log:          log,
-		imports:      make(map[string]*loader.Instance),
+		imports:      map[string]*loader.Instance{},
 	}
 
 	if err := p.loadImports(); err != nil {
@@ -116,8 +119,12 @@ func (p *Plan) loadImports() error {
 // - `pkg.#Bar` = definition in package pkg
 func (p *Plan) GetDefinition(path string, line, char int) (*loader.Value, error) {
 	p.log.Debugf("Looking for file: %s", path)
-	f, found := p.files[path]
-	if !found {
+
+	p.muFiles.RLock()
+	defer p.muFiles.RUnlock()
+
+	f, ok := p.files[path]
+	if !ok {
 		return nil, fmt.Errorf("file not registered")
 	}
 
@@ -153,11 +160,11 @@ func (p *Plan) Reload() error {
 		err error
 	)
 
-	switch p.kind {
+	switch p.Kind {
 	case File:
-		i, err = loader.File(p.rootPath, p.rootFilePath)
+		i, err = loader.File(p.rootPath, p.RootFilePath)
 	case Directory:
-		i, err = loader.Dir(p.rootPath, p.rootFilePath)
+		i, err = loader.Dir(p.rootPath, p.RootFilePath)
 	}
 
 	if err != nil {
@@ -192,7 +199,9 @@ func (p *Plan) AddFile(path string) error {
 	if err != nil {
 		return err
 	}
-
+	p.muFiles.Lock()
 	p.files[path] = f
+	p.muFiles.Unlock()
+
 	return nil
 }

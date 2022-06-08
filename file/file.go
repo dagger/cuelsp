@@ -28,7 +28,7 @@ func New(path string) (*File, error) {
 		return nil, err
 	}
 
-	defs := make(parser.Definitions)
+	defs := parser.Definitions{}
 	parser.ParseDefs(&defs, content)
 
 	return &File{

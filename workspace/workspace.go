@@ -7,18 +7,18 @@ import (
 	"github.com/tliron/kutil/logging"
 )
 
-// Workspace is a representation of working directory
+// Workspace represents the working directory.
 type Workspace struct {
 	path  string
 	log   logging.Logger
 	plans []*plan.Plan
 }
 
-// New initialize a new workspace in the language server
-func New(path string) *Workspace {
+// New initializes a new workspace in the language server.
+func New(path string, logger logging.Logger) *Workspace {
 	return &Workspace{
 		path: path,
-		log:  logging.GetLogger("workspace"),
+		log:  logging.NewScopeLogger(logger, "workspace"),
 	}
 }
 
@@ -56,11 +56,11 @@ func (wk *Workspace) GetPlan(file string) *plan.Plan {
 	file = wk.TrimRootPath(file)
 
 	for _, p := range wk.plans {
-		wk.log.Debugf("compare %s %s with %s", p.Kind(), p.RootFilePath(), file)
-		if p.Kind() == plan.File && p.RootFilePath() == file {
+		wk.log.Debugf("compare %s %s with %s", p.Kind, p.RootFilePath, file)
+		if p.Kind == plan.File && p.RootFilePath == file {
 			return p
 		}
-		if p.Kind() == plan.Directory && filepath.Dir(p.RootFilePath()) == filepath.Dir(file) {
+		if p.Kind == plan.Directory && filepath.Dir(p.RootFilePath) == filepath.Dir(file) {
 			return p
 		}
 	}

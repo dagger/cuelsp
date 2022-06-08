@@ -20,7 +20,7 @@ type Instance struct {
 func NewInstance(i *build.Instance) *Instance {
 	return &Instance{
 		Instance: i,
-		defs:     make(map[string]*Value),
+		defs:     map[string]*Value{},
 	}
 }
 

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	util "github.com/dagger/dlsp/convertor"
 	"github.com/dagger/dlsp/workspace"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
@@ -15,8 +14,7 @@ import (
 type LSPServer struct {
 	workspace *workspace.Workspace
 
-	handler      protocol.Handler
-	capabilities protocol.ServerCapabilities
+	handler *protocol.Handler
 
 	server *server.Server
 
@@ -41,7 +39,7 @@ func NewLSPServer(lsName string, log logging.Logger) *LSPServer {
 	}
 
 	// we complete the fields once they are correctly filled
-	s.handler = handler
+	s.handler = &handler
 	s.server = server.NewServer(&handler, lsName, false)
 
 	return &s
@@ -61,14 +59,14 @@ func (s *LSPServer) initialize(_ *glsp.Context, params *protocol.InitializeParam
 
 	capabilities := s.handler.CreateServerCapabilities()
 	capabilities.TextDocumentSync = protocol.TextDocumentSyncOptions{
-		OpenClose: util.BoolPtr(true),
+		OpenClose: boolPtr(true),
 		Change:    &change,
-		Save:      util.BoolPtr(true),
+		Save:      boolPtr(true),
 	}
 	capabilities.Workspace = &protocol.ServerCapabilitiesWorkspace{
 		WorkspaceFolders: &protocol.WorkspaceFoldersServerCapabilities{
-			Supported:           util.BoolPtr(true),
-			ChangeNotifications: &protocol.BoolOrString{Value: util.BoolPtr(true)},
+			Supported:           boolPtr(true),
+			ChangeNotifications: &protocol.BoolOrString{Value: boolPtr(true)},
 		}}
 	capabilities.DefinitionProvider = true
 
@@ -84,7 +82,7 @@ func (s *LSPServer) initialize(_ *glsp.Context, params *protocol.InitializeParam
 		if err != nil {
 			return nil, err
 		}
-		s.workspace = workspace.New(_uri.Filename())
+		s.workspace = workspace.New(_uri.Filename(), s.log)
 	default:
 		s.log.Errorf("Multiple workspace not suported")
 	}
@@ -182,7 +180,7 @@ func (s *LSPServer) documentDefinition(_ *glsp.Context, params *protocol.Definit
 	s.log.Debugf("Position: %#v", location.Pos().Position())
 
 	res := protocol.Location{
-		URI: fmt.Sprintf("%s", uri.File(location.Pos().Filename())),
+		URI: string(uri.File(location.Pos().Filename())),
 		Range: protocol.Range{
 			Start: protocol.Position{
 				Line:      protocol.UInteger(location.Pos().Line()) - 1,
@@ -198,4 +196,10 @@ func (s *LSPServer) documentDefinition(_ *glsp.Context, params *protocol.Definit
 	s.log.Debugf("Res: %#v", res)
 
 	return res, nil
+}
+
+// boolPtr convert a boolean to a pointer to boolean
+func boolPtr(v bool) *bool {
+	b := v
+	return &b
 }
