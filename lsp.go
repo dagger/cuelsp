@@ -180,7 +180,7 @@ func (s *LSPServer) documentDefinition(_ *glsp.Context, params *protocol.Definit
 	s.log.Debugf("Position: %#v", location.Pos().Position())
 
 	res := protocol.Location{
-		URI: fmt.Sprintf("%s", uri.File(location.Pos().Filename())),
+		URI: string(uri.File(location.Pos().Filename())),
 		Range: protocol.Range{
 			Start: protocol.Position{
 				Line:      protocol.UInteger(location.Pos().Line()) - 1,
