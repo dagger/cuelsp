@@ -70,7 +70,7 @@ func New(root, filePath string) (*Plan, error) {
 		return nil, err
 	}
 
-	files := make(map[string]*file.File)
+	files := map[string]*file.File{}
 	files[filePath] = f
 
 	// Load cue value
@@ -82,7 +82,7 @@ func New(root, filePath string) (*Plan, error) {
 		instance:     i,
 		v:            v,
 		log:          log,
-		imports:      make(map[string]*loader.Instance),
+		imports:      map[string]*loader.Instance{},
 	}
 
 	if err := p.loadImports(); err != nil {

@@ -115,7 +115,7 @@ func TestDefinitionParsing(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			defs := make(Definitions)
+			defs := Definitions{}
 			ParseDefs(&defs, f)
 			output := defs.String()
 			for _, o := range tc.output {
@@ -177,7 +177,7 @@ func TestFindDefinition(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			defs := make(Definitions)
+			defs := Definitions{}
 			ParseDefs(&defs, f)
 
 			name, err := defs.Find(tc.input.line, tc.input.col)
