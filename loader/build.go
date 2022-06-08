@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"path"
 	"path/filepath"
+	"sync"
 
 	cueload "cuelang.org/go/cue/load"
 )
@@ -21,6 +22,7 @@ func File(src, file string) (*Instance, error) {
 
 // Build a cue instance from the files in fs.
 func Build(src string, overlays map[string]fs.FS, file string) (*Instance, error) {
+	var muCfg sync.RWMutex
 	buildConfig := &cueload.Config{
 		Dir:     src,
 		Overlay: map[string]cueload.Source{},
@@ -49,7 +51,9 @@ func Build(src string, overlays map[string]fs.FS, file string) (*Instance, error
 			}
 
 			overlayPath := path.Join(buildConfig.Dir, mnt, p)
+			muCfg.Lock()
 			buildConfig.Overlay[overlayPath] = cueload.FromBytes(contents)
+			muCfg.Unlock()
 			return nil
 		})
 		if err != nil {
