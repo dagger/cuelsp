@@ -84,7 +84,7 @@ func (s *LSPServer) initialize(_ *glsp.Context, params *protocol.InitializeParam
 		if err != nil {
 			return nil, err
 		}
-		s.workspace = workspace.New(_uri.Filename())
+		s.workspace = workspace.New(_uri.Filename(), s.log)
 	default:
 		s.log.Errorf("Multiple workspace not suported")
 	}

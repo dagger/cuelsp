@@ -15,10 +15,10 @@ type Workspace struct {
 }
 
 // New initialize a new workspace in the language server
-func New(path string) *Workspace {
+func New(path string, logger logging.Logger) *Workspace {
 	return &Workspace{
 		path: path,
-		log:  logging.GetLogger("workspace"),
+		log:  logging.NewScopeLogger(logger, "workspace"),
 	}
 }
 
