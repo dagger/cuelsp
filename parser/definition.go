@@ -55,7 +55,10 @@ func ParseDefs(defs *Definitions, f *ast.File) {
 		case *ast.SelectorExpr:
 			labelName, _, _ := ast.LabelName(v.Sel)
 			if IsDefinition(labelName) {
-				pkg := v.X.(*ast.Ident)
+				pkg, ok := v.X.(*ast.Ident)
+				if !ok {
+					return false
+				}
 				definitionName := fmt.Sprintf("%s.%s", pkg.Name, labelName)
 				defs.AppendRange(definitionName, pkg.Pos(), v.Sel.End())
 				return false
