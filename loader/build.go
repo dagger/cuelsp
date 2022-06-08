@@ -3,7 +3,6 @@ package loader
 import (
 	"fmt"
 	"io/fs"
-	"path"
 	"path/filepath"
 	"sync"
 
@@ -50,7 +49,7 @@ func Build(src string, overlays map[string]fs.FS, file string) (*Instance, error
 				return fmt.Errorf("%s: %w", p, err)
 			}
 
-			overlayPath := path.Join(buildConfig.Dir, mnt, p)
+			overlayPath := filepath.Join(buildConfig.Dir, mnt, p)
 			muCfg.Lock()
 			buildConfig.Overlay[overlayPath] = cueload.FromBytes(contents)
 			muCfg.Unlock()
