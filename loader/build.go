@@ -31,25 +31,25 @@ func Build(src string, overlays map[string]fs.FS, file string) (*Instance, error
 	for mnt, f := range overlays {
 		f := f
 		mnt := mnt
-		err := fs.WalkDir(f, ".", func(p string, entry fs.DirEntry, err error) error {
+		err := fs.WalkDir(f, ".", func(path string, dir fs.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}
 
-			if !entry.Type().IsRegular() {
+			if !dir.Type().IsRegular() {
 				return nil
 			}
 
-			if filepath.Ext(entry.Name()) != ".cue" {
+			if filepath.Ext(dir.Name()) != ".cue" {
 				return nil
 			}
 
-			contents, err := fs.ReadFile(f, p)
+			contents, err := fs.ReadFile(f, path)
 			if err != nil {
-				return fmt.Errorf("%s: %w", p, err)
+				return fmt.Errorf("%s: %w", path, err)
 			}
 
-			overlayPath := filepath.Join(buildConfig.Dir, mnt, p)
+			overlayPath := filepath.Join(buildConfig.Dir, mnt, path)
 			muCfg.Lock()
 			buildConfig.Overlay[overlayPath] = cueload.FromBytes(contents)
 			muCfg.Unlock()
