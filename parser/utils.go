@@ -20,7 +20,7 @@ import (
 // }
 
 func IsDefinition(name string) bool {
-	return strings.HasPrefix(name, "#")
+	return strings.HasPrefix(name, "#") || strings.HasPrefix(name, "_#")
 }
 
 func readFile(filename string) []byte {

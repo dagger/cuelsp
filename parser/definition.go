@@ -16,9 +16,9 @@ type Definitions map[int][]Range
 func (def Definitions) String() string {
 	str := fmt.Sprintf("%s\n", "")
 	for line, r := range def {
-		str += fmt.Sprintf("%d\n", line)
+		str += fmt.Sprintf("Line %d:", line)
 		for _, pos := range r {
-			str += fmt.Sprintf("\t%s", pos)
+			str += fmt.Sprintf("\t%s\n", pos)
 		}
 	}
 	return str

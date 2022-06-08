@@ -17,7 +17,7 @@ type Value struct {
 func (v *Value) IsDefinition() bool {
 	p := v.Path().String()
 
-	return strings.HasPrefix(p, "#") && !strings.Contains(p, ".")
+	return (strings.HasPrefix(p, "#") || strings.HasPrefix(p, "_#")) && !strings.Contains(p, ".")
 }
 
 // ListDefinitions recursively walk through cue Value to retrieve all
@@ -27,6 +27,7 @@ func (v *Value) ListDefinitions() ([]*Value, error) {
 
 	opts := []cue.Option{
 		cue.Definitions(true),
+		cue.Hidden(true),
 	}
 
 	customWalk(v, opts, func(v *Value) bool {
