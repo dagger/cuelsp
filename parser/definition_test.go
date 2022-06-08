@@ -9,11 +9,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var testCases = []struct {
+var testCases = map[string]struct {
 	input  string
 	output []string
 }{
-	{
+	"simple": {
 		input: `package main
 
 		import (
@@ -26,7 +26,8 @@ var testCases = []struct {
 		output: []string{
 			`#Foo: s[7:1]|e[7:5]`,
 		},
-	}, {
+	},
+	"with definition": {
 		input: `package main
 
 		#Plan: {
@@ -43,7 +44,8 @@ var testCases = []struct {
 			`#Plan: s[7:5]|e[7:10]`,
 			`dagger.#Plan: s[11:1]|e[11:13]`,
 		},
-	}, {
+	},
+	"many refs": {
 		input: `package main
 
 		import (
@@ -102,8 +104,8 @@ var testCases = []struct {
 }
 
 func TestDefinitionParsing(t *testing.T) {
-	for _, tc := range testCases {
-		t.Run("", func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			// trim multiline tabs
 			re := regexp.MustCompile(`		`)
 			strippedStr := re.ReplaceAllString(tc.input, "")
@@ -133,23 +135,23 @@ type Output struct {
 	err  error
 }
 
-var testFindCases = []struct {
+var testFindCases = map[string]struct {
 	input  Input
 	output Output
 }{
-	{
+	"7:1": {
 		input:  Input{line: 7, col: 1},
 		output: Output{name: `#Bar`, err: nil},
 	},
-	{
+	"7:4": {
 		input:  Input{line: 7, col: 4},
 		output: Output{name: `#Bar`, err: nil},
 	},
-	{
+	"7:5": {
 		input:  Input{line: 7, col: 5},
 		output: Output{name: `#Bar`, err: nil},
 	},
-	{
+	"7:6": {
 		input:  Input{line: 7, col: 6},
 		output: Output{name: ``, err: fmt.Errorf("definition not found")},
 	},
@@ -157,14 +159,17 @@ var testFindCases = []struct {
 
 func TestFindDefinition(t *testing.T) {
 	// Rely on one of above test case (the most complex)
-	cueFile := testCases[2]
+	cueFile, ok := testCases["many refs"]
+	if !ok {
+		t.Fatal("bad key in testCases")
+	}
 
 	// trim multiline tabs
 	re := regexp.MustCompile(`		`)
 	strippedStr := re.ReplaceAllString(cueFile.input, "")
 
-	for _, tc := range testFindCases {
-		t.Run("", func(t *testing.T) {
+	for name, tc := range testFindCases {
+		t.Run(name, func(t *testing.T) {
 
 			// Use ParseFile wrapper to load URI files instead of this one
 			f, err := cueparser.ParseFile("test", strippedStr)
