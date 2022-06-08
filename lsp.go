@@ -15,8 +15,7 @@ import (
 type LSPServer struct {
 	workspace *workspace.Workspace
 
-	handler      protocol.Handler
-	capabilities protocol.ServerCapabilities
+	handler *protocol.Handler
 
 	server *server.Server
 
@@ -41,7 +40,7 @@ func NewLSPServer(lsName string, log logging.Logger) *LSPServer {
 	}
 
 	// we complete the fields once they are correctly filled
-	s.handler = handler
+	s.handler = &handler
 	s.server = server.NewServer(&handler, lsName, false)
 
 	return &s
