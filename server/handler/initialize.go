@@ -8,6 +8,9 @@ import (
 	"go.lsp.dev/uri"
 )
 
+// initialize the language server with his capabilities and the user's workspace.
+// Spec: https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initialize
+// /!\ Only one workspace in currently supported.
 func (h *Handler) initialize(_ *glsp.Context, params *protocol.InitializeParams) (interface{}, error) {
 	change := protocol.TextDocumentSyncKindFull
 

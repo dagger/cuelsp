@@ -6,6 +6,8 @@ import (
 	"go.lsp.dev/uri"
 )
 
+// documentDidOpen register a new plan in the workspace
+// Spec: https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_didOpen
 func (h *Handler) documentDidOpen(_ *glsp.Context, params *protocol.DidOpenTextDocumentParams) error {
 	h.log.Debugf("Document opened: %s", params.TextDocument.URI)
 	h.log.Debugf("params: %#v", params)

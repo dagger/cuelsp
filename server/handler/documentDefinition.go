@@ -8,6 +8,11 @@ import (
 	"go.lsp.dev/uri"
 )
 
+// documentDefinition returns the protocol.Location of searched value in the
+// CUE plan.
+// It currently handles CUE definition
+// If nothing is found, it will return nil and an error
+// Spec: https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_definition
 func (h *Handler) documentDefinition(_ *glsp.Context, params *protocol.DefinitionParams) (interface{}, error) {
 	h.log.Debugf("Jump to def: %s", params.TextDocument.URI)
 	h.log.Debugf("params: %#v", params)

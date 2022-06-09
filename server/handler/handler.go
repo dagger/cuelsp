@@ -1,3 +1,6 @@
+// Package handler is a collection of all methods supported by LSP.
+// To implements a new methods, just create a new file with the name of the
+// method.
 package handler
 
 import (
@@ -6,6 +9,8 @@ import (
 	"github.com/tliron/kutil/logging"
 )
 
+// Handler is the storage for any handler of the server.LSP.
+// It also handles a single workspace for now which represent a VSCode project
 type Handler struct {
 	workspace *workspace.Workspace
 
@@ -18,6 +23,8 @@ type Handler struct {
 	lsVersion string
 }
 
+// New creates a Handler instance that contains all methods supported by
+// the LSP
 func New(lsName, lsVersion string, log logging.Logger) *Handler {
 	h := &Handler{
 		lsName:    lsName,
