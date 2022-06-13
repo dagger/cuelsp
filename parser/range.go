@@ -13,6 +13,18 @@ type Range struct {
 	name  string
 }
 
+func (r Range) Start() token.Pos {
+	return r.start
+}
+
+func (r Range) End() token.Pos {
+	return r.end
+}
+
+func (r Range) Name() string {
+	return r.name
+}
+
 func (r Range) String() string {
 	start := r.start.Position()
 	end := r.end.Position()
