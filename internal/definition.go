@@ -10,7 +10,8 @@ type Definition struct {
 	def        string
 }
 
-// StringToDef convert a string into definition
+// StringToDef convert a string into definition.
+// This function expect that def is correctly formatted.
 func StringToDef(def string) *Definition {
 	isImported := strings.Contains(def, ".")
 
