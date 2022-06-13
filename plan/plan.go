@@ -20,6 +20,7 @@ type Plan struct {
 
 	// muFiles protects the access to the files map.
 	muFiles sync.RWMutex
+
 	// files store the loaded files.
 	files map[string]*file.File
 
