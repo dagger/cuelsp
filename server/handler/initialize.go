@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"fmt"
+
 	"github.com/dagger/dlsp/server/utils"
 	"github.com/dagger/dlsp/workspace"
 	"github.com/tliron/glsp"
@@ -12,36 +14,10 @@ import (
 // Spec: https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initialize
 // /!\ Only one workspace in currently supported.
 func (h *Handler) initialize(_ *glsp.Context, params *protocol.InitializeParams) (interface{}, error) {
-	change := protocol.TextDocumentSyncKindFull
-
-	capabilities := h.handler.CreateServerCapabilities()
-	capabilities.TextDocumentSync = protocol.TextDocumentSyncOptions{
-		OpenClose: utils.BoolPtr(true),
-		Change:    &change,
-		Save:      utils.BoolPtr(true),
-	}
-	capabilities.Workspace = &protocol.ServerCapabilitiesWorkspace{
-		WorkspaceFolders: &protocol.WorkspaceFoldersServerCapabilities{
-			Supported:           utils.BoolPtr(true),
-			ChangeNotifications: &protocol.BoolOrString{Value: utils.BoolPtr(true)},
-		}}
-	capabilities.DefinitionProvider = true
+	capabilities := h.capabilities()
 
 	if params.Trace != nil {
 		protocol.SetTraceValue(*params.Trace)
-	}
-
-	switch len(params.WorkspaceFolders) {
-	case 0:
-		h.log.Errorf("No workspace folder found")
-	case 1:
-		_uri, err := uri.Parse(params.WorkspaceFolders[0].URI)
-		if err != nil {
-			return nil, err
-		}
-		h.workspace = workspace.New(_uri.Filename(), h.log)
-	default:
-		h.log.Errorf("Multiple workspace not supported")
 	}
 
 	return protocol.InitializeResult{
@@ -51,4 +27,48 @@ func (h *Handler) initialize(_ *glsp.Context, params *protocol.InitializeParams)
 			Version: &h.lsVersion,
 		},
 	}, nil
+}
+
+// initWorkspace creates a new workspace depending on workspace folders.
+// Currently, it does not handle multiple workspace
+func (h *Handler) initWorkspace(workspaceFolders []*protocol.WorkspaceFolder) error {
+	switch len(workspaceFolders) {
+	case 0:
+		return fmt.Errorf("no workspace folder found")
+	case 1:
+		_uri, err := uri.Parse(workspaceFolders[0].URI)
+		if err != nil {
+			return err
+		}
+		h.workspace = workspace.New(_uri.Filename(), h.log)
+
+		return nil
+	default:
+		return fmt.Errorf("multiple workspace not supported")
+	}
+}
+
+// capabilities return set of Handler server capabilities
+func (h *Handler) capabilities() protocol.ServerCapabilities {
+	capabilities := h.handler.CreateServerCapabilities()
+
+	// Synchronisation
+	change := protocol.TextDocumentSyncKindFull
+	capabilities.TextDocumentSync = protocol.TextDocumentSyncOptions{
+		OpenClose: utils.BoolPtr(true),
+		Change:    &change,
+		Save:      utils.BoolPtr(true),
+	}
+
+	// Workspace configuration
+	capabilities.Workspace = &protocol.ServerCapabilitiesWorkspace{
+		WorkspaceFolders: &protocol.WorkspaceFoldersServerCapabilities{
+			Supported:           utils.BoolPtr(true),
+			ChangeNotifications: &protocol.BoolOrString{Value: utils.BoolPtr(true)},
+		}}
+
+	// Jump to definition
+	capabilities.DefinitionProvider = true
+
+	return capabilities
 }
