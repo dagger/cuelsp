@@ -20,6 +20,10 @@ func (h *Handler) initialize(_ *glsp.Context, params *protocol.InitializeParams)
 		protocol.SetTraceValue(*params.Trace)
 	}
 
+	if err := h.initWorkspace(params.WorkspaceFolders); err != nil {
+		return nil, err
+	}
+
 	return protocol.InitializeResult{
 		Capabilities: capabilities,
 		ServerInfo: &protocol.InitializeResultServerInfo{
@@ -31,7 +35,7 @@ func (h *Handler) initialize(_ *glsp.Context, params *protocol.InitializeParams)
 
 // initWorkspace creates a new workspace depending on workspace folders.
 // Currently, it does not handle multiple workspace
-func (h *Handler) initWorkspace(workspaceFolders []*protocol.WorkspaceFolder) error {
+func (h *Handler) initWorkspace(workspaceFolders []protocol.WorkspaceFolder) error {
 	switch len(workspaceFolders) {
 	case 0:
 		return fmt.Errorf("no workspace folder found")
