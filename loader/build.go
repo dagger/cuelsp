@@ -28,6 +28,8 @@ func Build(src string, overlays map[string]fs.FS, file string) (*Instance, error
 	}
 
 	// Map the source files into the overlay
+	// FIXME(TomChv): Is it useful in our cases since we send nil in Dir and
+	// File
 	for mnt, f := range overlays {
 		f := f
 		mnt := mnt

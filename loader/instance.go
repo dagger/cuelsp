@@ -96,5 +96,5 @@ func (i *Instance) String() string {
 		defs += fmt.Sprintf("\n\t-\t%s", k)
 	}
 
-	return fmt.Sprintf("Instance: %s\n  Defs: %s\n", i.PkgName, defs)
+	return fmt.Sprintf("Instance: %s\nDefs:%s\n", i.PkgName, defs)
 }
