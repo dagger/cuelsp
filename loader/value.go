@@ -35,7 +35,9 @@ func (v *Value) ListDefinitions() ([]*Value, error) {
 			defs = append(defs, v)
 		}
 
-		return true
+		// Ignore list because there cannot be definition
+		// define in it.
+		return v.Kind() != cue.ListKind
 	}, nil)
 
 	return defs, nil
