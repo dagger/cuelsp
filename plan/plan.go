@@ -2,6 +2,7 @@ package plan
 
 import (
 	"fmt"
+	"path/filepath"
 	"sync"
 
 	"github.com/dagger/dlsp/file"
@@ -43,7 +44,7 @@ type Plan struct {
 
 // New load a new cue value
 func New(root, filePath string) (*Plan, error) {
-	log := logging.GetLogger(fmt.Sprintf("plan: %s", filePath))
+	log := logging.GetLogger(fmt.Sprintf("root: %s, plan: %s", root, filePath))
 
 	k := File
 	log.Debugf("Try to load plan as file")
@@ -66,7 +67,7 @@ func New(root, filePath string) (*Plan, error) {
 		return nil, err
 	}
 
-	f, err := file.New(filePath)
+	f, err := file.New(filepath.Join(root, filePath))
 	if err != nil {
 		return nil, err
 	}
@@ -196,7 +197,7 @@ func (p *Plan) Reload() error {
 func (p *Plan) AddFile(path string) error {
 	p.log.Debugf("Add a new file to plan: %s", path)
 
-	f, err := file.New(path)
+	f, err := file.New(filepath.Join(p.rootPath, path))
 	if err != nil {
 		return err
 	}
