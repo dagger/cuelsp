@@ -1,2 +1,10 @@
+# Editors
+.vscode/
 .idea/
+
+# Binary
 dlsp
+
+
+# Coverage
+*.cov
