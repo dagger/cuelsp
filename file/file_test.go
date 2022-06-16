@@ -36,6 +36,11 @@ func TestNew(t *testing.T) {
 			input:      filepath.Join(TestSourceDir, "nested/nested.cue"),
 			outputDefs: []string{"#Continent", "#Continent", "#Continent", "#Tree", "#Tree", "#Tree"},
 		},
+		{
+			name:    "file not found",
+			success: false,
+			input:   "unknown",
+		},
 	}
 
 	for _, tt := range testsCases {
@@ -43,9 +48,14 @@ func TestNew(t *testing.T) {
 			f, err := New(tt.input)
 			if !tt.success {
 				assert.NotNil(t, err)
+				return
 			}
 
 			assert.Nil(t, err)
+
+			assert.Equal(t, tt.input, f.Path())
+			assert.NotNil(t, f.Content())
+			assert.NotEmpty(t, f.String())
 			var defs []string
 			for _, d := range *(f.Defs()) {
 				for _, r := range d {
@@ -56,5 +66,4 @@ func TestNew(t *testing.T) {
 			assert.ElementsMatch(t, tt.outputDefs, defs)
 		})
 	}
-
 }
