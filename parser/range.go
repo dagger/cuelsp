@@ -6,7 +6,7 @@ import (
 	"cuelang.org/go/cue/token"
 )
 
-// Range position of definitions
+// Range position of a definition
 type Range struct {
 	start token.Pos
 	end   token.Pos

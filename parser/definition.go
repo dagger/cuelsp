@@ -8,9 +8,10 @@ import (
 	"cuelang.org/go/cue/token"
 )
 
-// map[int][]Range
-// int: line number
-// []Range: ascending by start.column() pos
+// Definitions is a map with the line number of a CUE file as key
+// and a range of definition as value.
+// Those Range are sorted in ascending order by start.Column()
+// Definitions can hold 10 definition (so 10 Range) in a line.
 type Definitions map[int][]Range
 
 func (def Definitions) String() string {
@@ -24,12 +25,18 @@ func (def Definitions) String() string {
 	return str
 }
 
-// Due to AST structure, it will always be sorted in ascending order by start.Column()
+// AppendRange add a new definition to the line.
+// Due to AST structure, it will always be sorted in ascending order by
+// start.Column()
 func (def Definitions) AppendRange(name string, start token.Pos, end token.Pos) {
 	def[start.Line()] = append(def[start.Line()], Range{start, end, name})
 }
 
-// Complexity O(log(n))
+// Find will search for a definition in the Definition object following line
+// and column
+// It will return the definition's name if found, or an error if not found
+// Find function has a complexity of O(log(n)) thanks Definitions data
+// structure that his a map.
 func (def Definitions) Find(line int, column int) (string, error) {
 	if r, ok := def[line]; ok {
 		rLen := len(r)
@@ -41,7 +48,12 @@ func (def Definitions) Find(line int, column int) (string, error) {
 	return "", fmt.Errorf("definition not found")
 }
 
-// Parse definitions of a given file
+// ParseDefs will fill Definitions data structure will all definitions found
+// in the given ast.File
+// There are two type of definitions declared in the AST
+// - Ident: those are definitions from the package itself
+// - SelectorExpr: those are definitions from external package
+// they will be stored as <pkg>.<def> (E.g., foo.#Bar)
 func ParseDefs(defs *Definitions, f *ast.File) {
 	ast.Walk(f, func(node ast.Node) bool {
 		switch v := node.(type) {
