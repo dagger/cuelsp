@@ -33,9 +33,9 @@ func (def Definitions) AppendRange(name string, start token.Pos, end token.Pos) 
 func (def Definitions) Find(line int, column int) (string, error) {
 	if r, ok := def[line]; ok {
 		rLen := len(r)
-		i := sort.Search(rLen, func(i int) bool { return column <= r[i].end.Column() })
-		if i < rLen && r[i].start.Column() <= column {
-			return r[i].name, nil
+		i := sort.Search(rLen, func(i int) bool { return column <= r[i].End().Column() })
+		if i < rLen && r[i].Start().Column() <= column {
+			return r[i].Name(), nil
 		}
 	}
 	return "", fmt.Errorf("definition not found")

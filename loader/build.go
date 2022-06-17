@@ -1,10 +1,8 @@
 package loader
 
 import (
-	"fmt"
 	"io/fs"
 	"path/filepath"
-	"sync"
 
 	cueload "cuelang.org/go/cue/load"
 )
@@ -20,8 +18,9 @@ func File(src, file string) (*Instance, error) {
 }
 
 // Build a cue instance from the files in fs.
-func Build(src string, overlays map[string]fs.FS, file string) (*Instance, error) {
-	var muCfg sync.RWMutex
+func Build(src string, _ map[string]fs.FS, file string) (*Instance, error) {
+	// var muCfg sync.RWMutex
+
 	buildConfig := &cueload.Config{
 		Dir:     src,
 		Overlay: map[string]cueload.Source{},
@@ -30,37 +29,37 @@ func Build(src string, overlays map[string]fs.FS, file string) (*Instance, error
 	// Map the source files into the overlay
 	// FIXME(TomChv): Is it useful in our cases since we send nil in Dir and
 	// File
-	for mnt, f := range overlays {
-		f := f
-		mnt := mnt
-		err := fs.WalkDir(f, ".", func(path string, dir fs.DirEntry, err error) error {
-			if err != nil {
-				return err
-			}
-
-			if !dir.Type().IsRegular() {
-				return nil
-			}
-
-			if filepath.Ext(dir.Name()) != ".cue" {
-				return nil
-			}
-
-			contents, err := fs.ReadFile(f, path)
-			if err != nil {
-				return fmt.Errorf("%s: %w", path, err)
-			}
-
-			overlayPath := filepath.Join(buildConfig.Dir, mnt, path)
-			muCfg.Lock()
-			buildConfig.Overlay[overlayPath] = cueload.FromBytes(contents)
-			muCfg.Unlock()
-			return nil
-		})
-		if err != nil {
-			return nil, err
-		}
-	}
+	//	for mnt, f := range overlays {
+	//		f := f
+	//		mnt := mnt
+	//		err := fs.WalkDir(f, ".", func(path string, dir fs.DirEntry, err error) error {
+	//			if err != nil {
+	//				return err
+	//			}
+	//
+	//			if !dir.Type().IsRegular() {
+	//				return nil
+	//			}
+	//
+	//			if filepath.Ext(dir.Name()) != ".cue" {
+	//				return nil
+	//			}
+	//
+	//			contents, err := fs.ReadFile(f, path)
+	//			if err != nil {
+	//				return fmt.Errorf("%s: %w", path, err)
+	//			}
+	//
+	//			overlayPath := filepath.Join(buildConfig.Dir, mnt, path)
+	//			muCfg.Lock()
+	//			buildConfig.Overlay[overlayPath] = cueload.FromBytes(contents)
+	//			muCfg.Unlock()
+	//			return nil
+	//		})
+	//		if err != nil {
+	//			return nil, err
+	//		}
+	//	}
 	instances := cueload.Instances([]string{file}, buildConfig)
 
 	instance := instances[0]

@@ -81,6 +81,9 @@ func TestNew(t *testing.T) {
 			assert.Equal(t, tt.out.RootFilePath, p.RootFilePath)
 			assert.Equal(t, tt.out.Kind, p.Kind)
 			assert.Equal(t, len(tt.out.imports), len(p.imports))
+
+			// Check that String do not crash
+			assert.NotEmpty(t, p.String())
 		})
 	}
 }
