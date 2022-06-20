@@ -53,8 +53,7 @@ func (i *Instance) GetValidatedValue() (*Value, error) {
 // Validate verify that instance value is correct
 // It return error if there is an error
 func (i *Instance) Validate() error {
-	_, err := i.GetValidatedValue()
-	if err != nil {
+	if _, err := i.GetValidatedValue(); err != nil {
 		return err
 	}
 

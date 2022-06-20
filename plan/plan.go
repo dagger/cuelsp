@@ -147,7 +147,7 @@ func (p *Plan) GetDefinition(path string, line, char int) (*loader.Value, error)
 	} else {
 		i, found := p.imports[_def.Pkg()]
 		if !found {
-			return nil, fmt.Errorf("imported package %s not registed in plan", _def.Def())
+			return nil, fmt.Errorf("imported package %s not registered in plan", _def.Def())
 		}
 
 		return i.GetDefinition(_def.Def())

@@ -9,8 +9,7 @@ import (
 func main() {
 	s := server.New()
 
-	err := s.Run()
-	if err != nil {
+	if err := s.Run(); err != nil {
 		panic(err)
 	}
 }

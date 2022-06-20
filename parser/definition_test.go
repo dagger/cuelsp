@@ -170,7 +170,6 @@ func TestFindDefinition(t *testing.T) {
 
 	for name, tc := range testFindCases {
 		t.Run(name, func(t *testing.T) {
-
 			// Use ParseFile wrapper to load URI files instead of this one
 			f, err := cueparser.ParseFile("test", strippedStr)
 			if err != nil {
