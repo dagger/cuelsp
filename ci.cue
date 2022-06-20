@@ -17,7 +17,6 @@ dagger.#Plan & {
 
 		build: go.#Build & {
 			source:     _code
-			binaryName: "dlsp"
 		}
 
 		test: go.#Test & {
