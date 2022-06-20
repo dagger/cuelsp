@@ -3,7 +3,13 @@ package plan
 import (
 	"fmt"
 	"path/filepath"
+
+	"github.com/dagger/dlsp/file"
 )
+
+func (p *Plan) Files() map[string]*file.File {
+	return p.files
+}
 
 func (p *Plan) String() string {
 	var imports string
