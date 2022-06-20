@@ -36,7 +36,6 @@ func TestStringToDef(t *testing.T) {
 			assert.Equal(t, tt.output.IsImported(), def.IsImported())
 			assert.Equal(t, tt.output.Pkg(), def.Pkg())
 			assert.Equal(t, tt.output.Def(), def.Def())
-
 		})
 	}
 }

@@ -25,8 +25,7 @@ func New(path string, logger logging.Logger) *Workspace {
 // AddPlan load a new plan into the workspace
 // It does not load a plan if it already exists
 func (wk *Workspace) AddPlan(file string) error {
-	p := wk.GetPlan(file)
-	if p != nil {
+	if p := wk.GetPlan(file); p != nil {
 		wk.log.Debugf("plan %s is already loaded", file)
 
 		err := p.AddFile(wk.TrimRootPath(file))

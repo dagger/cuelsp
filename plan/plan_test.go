@@ -315,22 +315,24 @@ func TestPlan_AddFile(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
-		p, err := New(tt.root, tt.file)
-		assert.Nil(t, err)
+		t.Run(tt.name, func(t *testing.T) {
+			p, err := New(tt.root, tt.file)
+			assert.Nil(t, err)
 
-		err = p.AddFile(tt.fileToAdd)
-		if !tt.success {
-			assert.NotNil(t, err)
-			return
-		}
+			err = p.AddFile(tt.fileToAdd)
+			if !tt.success {
+				assert.NotNil(t, err)
+				return
+			}
 
-		assert.Nil(t, err)
+			assert.Nil(t, err)
 
-		_, ok := p.files[tt.file]
-		assert.Equal(t, true, ok)
+			_, ok := p.files[tt.file]
+			assert.Equal(t, true, ok)
 
-		_, ok = p.files[tt.fileToAdd]
-		assert.Equal(t, true, ok)
+			_, ok = p.files[tt.fileToAdd]
+			assert.Equal(t, true, ok)
+		})
 	}
 }
 
