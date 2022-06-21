@@ -55,3 +55,9 @@ jobs:
 
       - name: Test
         run: dagger project update && dagger do test
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: unit coverage
+          path: /tmp/cov.html

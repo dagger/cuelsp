@@ -25,7 +25,7 @@ env:
 
 jobs:
   unit-tests:
-    name: "Unit tests"
+    name: "Build"
     runs-on: ubuntu-latest
     env:
       DAGGER_CACHE_BASE: "ci-build"

@@ -2,14 +2,21 @@ package ci
 
 import (
 	"dagger.io/dagger"
+
 	"universe.dagger.io/go"
 
 	"tom.chauveau.pro@icloud.com/golangci"
 )
 
 dagger.#Plan & {
+	// Input
 	client: filesystem: ".": read: {
 		include: ["**/*.go", "go.mod", "go.sum", ".golangci.yaml", "**/testdata/*", ".golangci.yaml"]
+	}
+
+	// Output
+	client: filesystem: "/tmp/cov.html": write: {
+		contents: actions.coverage.export.files."/tmp/cov.html"
 	}
 
 	actions: {
@@ -22,11 +29,26 @@ dagger.#Plan & {
 		test: go.#Test & {
 			source:  _code
 			package: "./..."
-			command: flags: "-race": true
+			command: flags: {
+				"-race":         true
+				"-coverprofile": "/tmp/cov.txt"
+			}
 		}
 
 		lint: golangci.#Lint & {
 			source: _code
+		}
+
+		coverage: go.#Container & {
+			input:  test.output
+			source: _code
+			command: {
+				name: "sh"
+				args: ["-c", """
+					go tool cover -html=/tmp/cov.txt -o /tmp/cov.html
+					"""]
+			}
+			export: files: "/tmp/cov.html": string
 		}
 	}
 }
