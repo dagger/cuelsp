@@ -15,15 +15,20 @@ dagger.#Plan & {
 	}
 
 	// Output
-	client: filesystem: "/tmp/cov.html": write: {
-		contents: actions.coverage.export.files."/tmp/cov.html"
+	client: filesystem: {
+		"/tmp/cov.html": write: {
+			contents: actions.coverage.export.files."/tmp/cov.html"
+		}
+		"/tmp/cov.txt": write: {
+			contents: actions.coverage.export.files."/tmp/cov.txt"
+		}
 	}
 
 	actions: {
 		_code: client.filesystem.".".read.contents
 
 		build: go.#Build & {
-			source:     _code
+			source: _code
 		}
 
 		test: go.#Test & {
@@ -48,7 +53,10 @@ dagger.#Plan & {
 					go tool cover -html=/tmp/cov.txt -o /tmp/cov.html
 					"""]
 			}
-			export: files: "/tmp/cov.html": string
+			export: files: {
+				"/tmp/cov.html": string
+				"/tmp/cov.txt":  string
+			}
 		}
 	}
 }
