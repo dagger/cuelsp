@@ -1,0 +1,31 @@
+project_name: daggerlsp
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^doc:"
+      - "^test:"
+      - "^tests:"
+      - "^ci:"
+      - "^website:"
+      - "^infra:"
+      - "^chore:"
+      - "^build\\(deps\\):"
+      - "^build\\(deps-dev\\):"
+      - "^Merge pull request"
