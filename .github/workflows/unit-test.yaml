@@ -54,16 +54,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
 
       - name: Test
-        run: dagger project update && dagger do test
-
-      - name: Upload coverage
-        uses: actions/upload-artifact@v3
-        with:
-          name: unit coverage
-          path: /tmp/cov.html
-
-      - name: Check file
-        run: ls /tmp
+        run: dagger project update && dagger do coverage
 
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v3
