@@ -17,10 +17,10 @@ dagger.#Plan & {
 	// Output
 	client: filesystem: {
 		"/tmp/cov.html": write: {
-			contents: actions.coverage.export.files."/tmp/cov.html"
+			contents: actions.test.coverage.export.files."/tmp/cov.html"
 		}
 		"/tmp/cov.txt": write: {
-			contents: actions.coverage.export.files."/tmp/cov.txt"
+			contents: actions.test.coverage.export.files."/tmp/cov.txt"
 		}
 	}
 
@@ -31,32 +31,34 @@ dagger.#Plan & {
 			source: _code
 		}
 
-		test: go.#Test & {
-			source:  _code
-			package: "./..."
-			command: flags: {
-				"-race":         true
-				"-coverprofile": "/tmp/cov.txt"
+		test: {
+			go.#Test & {
+				source:  _code
+				package: "./..."
+				command: flags: {
+					"-race":         true
+					"-coverprofile": "/tmp/cov.txt"
+				}
+			}
+
+			coverage: go.#Container & {
+				input:  test.output
+				source: _code
+				command: {
+					name: "sh"
+					args: ["-c", """
+						go tool cover -html=/tmp/cov.txt -o /tmp/cov.html
+						"""]
+				}
+				export: files: {
+					"/tmp/cov.html": string
+					"/tmp/cov.txt":  string
+				}
 			}
 		}
 
 		lint: golangci.#Lint & {
 			source: _code
-		}
-
-		coverage: go.#Container & {
-			input:  test.output
-			source: _code
-			command: {
-				name: "sh"
-				args: ["-c", """
-					go tool cover -html=/tmp/cov.txt -o /tmp/cov.html
-					"""]
-			}
-			export: files: {
-				"/tmp/cov.html": string
-				"/tmp/cov.txt":  string
-			}
 		}
 	}
 }
