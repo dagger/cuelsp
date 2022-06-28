@@ -39,15 +39,15 @@ Using Dagger, commands running in the CI behave the same as on your local system
 | Run test     | `dagger do test`  |
 | Build binary | `dagger do build` |
 
-> If you are on Mac M1, you should build binary using `go build -o dlsp` because Buildkit
+> If you are on Mac M1, you should build binary using `go build -o daggerlsp` because Buildkit
 > does not support `darwin/arm64` platform.
 
 ### Capabilities
 
 | Feature                 | Supported          | Link to documentation               |
 |-------------------------|--------------------|-------------------------------------|
-| Load cue plan           | :white_check_mark: | [how dlsp load CUE](./docs/load.md) |
-| Load multiples files    | :white_check_mark: | [how dlsp load CUE](./docs/load.md) |
+| Load cue plan           | :white_check_mark: | [how daggerlsp load CUE](./docs/load.md) |
+| Load multiples files    | :white_check_mark: | [how daggerlsp load CUE](./docs/load.md) |
 | Jump to CUE definition  | :white_check_mark: | [manage jump-to](./docs/jump-to.md) |
 | Syntax highlighting     | :hourglass:        |                                     |
 | Doc Hover               | :no_entry_sign:    |                                     |

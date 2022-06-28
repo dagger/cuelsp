@@ -19,7 +19,7 @@ type LSP struct {
 }
 
 const (
-	Name    = "dlsp"
+	Name    = "daggerlsp"
 	Version = "0.0.1"
 )
 
@@ -27,7 +27,7 @@ const (
 // and his handler
 func New() *LSP {
 	// This increases logging verbosity (optional)
-	// logTo := "/tmp/dlsp.log"
+	// logTo := "/tmp/daggerlsp.log"
 	// logging.Configure(2, &logTo)
 	logging.Configure(2, nil)
 	log := logging.GetLogger(Name)

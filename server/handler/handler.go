@@ -33,14 +33,15 @@ func New(lsName, lsVersion string, log logging.Logger) *Handler {
 	}
 
 	h.handler = &protocol.Handler{
-		Initialize:             h.initialize,
-		Initialized:            h.initialized,
-		Shutdown:               h.shutdown,
-		SetTrace:               h.setTrace,
-		TextDocumentDidSave:    h.documentDidSave,
-		TextDocumentDidOpen:    h.documentDidOpen,
-		TextDocumentDefinition: h.documentDefinition,
-		TextDocumentHover:      h.documentHover,
+		Initialize:                     h.initialize,
+		Initialized:                    h.initialized,
+		Shutdown:                       h.shutdown,
+		SetTrace:                       h.setTrace,
+		TextDocumentDidSave:            h.documentDidSave,
+		TextDocumentDidOpen:            h.documentDidOpen,
+		TextDocumentDefinition:         h.documentDefinition,
+		TextDocumentHover:              h.documentHover,
+		TextDocumentSemanticTokensFull: h.documentSemanticTokensFull,
 	}
 
 	return h

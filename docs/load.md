@@ -1,8 +1,8 @@
-# How DLSP load CUE ?
+# How DAGGER_LSP loads CUE ?
 
 ## Theory
 
-Even if DLSP works with raw CUE, he unleashes his capabilities when used with Dagger.
+Even if DAGGER_LSP works with raw CUE, he unleashes his capabilities when used with Dagger.
 
 One big challenge of CUE is to know how load the current file. There are 2 ways:
 
@@ -26,7 +26,7 @@ tree -P "*.cue" -I "testdata"
 :bulb: A _plan_ is a file that contains a `dagger.#Plan` definition. For more information,
 see [official documentation](https://docs.dagger.io/1202/plan).
 
-On the other side, DLSP must work when you want to develop new definitions that are not part of a `dagger.#Plan`, for
+On the other side, DAGGER_LSP must work when you want to develop new definitions that are not part of a `dagger.#Plan`, for
 instance if you want to create your own [reusable action](https://docs.dagger.io/1239/making-reusable-package).
 
 So we have a problem : how to load the plan?
@@ -46,5 +46,5 @@ So what we do is simple :
 ## :warning: Limitation
 
 Some plans can work alone even if they are supposed to be merged during usage.  
-That should not affect usability of DLSP for now, but if it does, feel free to open an issue, so we can prioritize this
+That should not affect usability of DAGGER_LSP for now, but if it does, feel free to open an issue, so we can prioritize this
 problem

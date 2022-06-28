@@ -3,7 +3,7 @@ package utils
 import (
 	"fmt"
 
-	"github.com/dagger/dlsp/loader"
+	"github.com/dagger/daggerlsp/loader"
 )
 
 // FormatDefinitionDoc will prettify the doc of a CUE value by providing any

@@ -3,7 +3,7 @@ package handler
 import (
 	"fmt"
 
-	"github.com/dagger/dlsp/server/utils"
+	"github.com/dagger/daggerlsp/server/utils"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 	"go.lsp.dev/uri"
