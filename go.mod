@@ -27,6 +27,7 @@ require (
 	github.com/sourcegraph/jsonrpc2 v0.1.0 // indirect
 	github.com/zchee/color/v2 v2.0.6 // indirect
 	golang.org/x/crypto v0.0.0-20220507011949-2cf3adece122 // indirect
+	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
 	golang.org/x/text v0.3.7 // indirect
@@ -37,7 +38,7 @@ require (
 require (
 	github.com/stretchr/testify v1.7.1
 	github.com/tliron/glsp v0.1.1
-	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
-	golang.org/x/tools v0.1.10 // indirect
+	golang.org/x/sys v0.0.0-20220614162138-6c1b26c55098 // indirect
+	golang.org/x/tools v0.1.11 // indirect
 	golang.org/x/xerrors v0.0.0-20220517211312-f3a8303e98df // indirect
 )
