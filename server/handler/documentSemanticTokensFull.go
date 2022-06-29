@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/dagger/dlsp/scanner"
+	"github.com/dagger/dlsp/semantic"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 	"go.lsp.dev/uri"
@@ -21,7 +21,7 @@ func (h *Handler) documentSemanticTokensFull(context *glsp.Context, params *prot
 	// TODO: remonter les erreurs
 	//
 
-	data := scanner.ScanFile(_uri.Filename(), h.log)
+	data, err := semantic.Tokenize(_uri.Filename(), h.log)
 	// if err := h.workspace.AddPlan(_uri.Filename()); err != nil {
 	// 	return err
 	// }
@@ -33,6 +33,7 @@ func (h *Handler) documentSemanticTokensFull(context *glsp.Context, params *prot
 	// return &protocol.SemanticTokens{
 	// 	Data: ok,
 	// }, nil
+	// toto := protocol.TextDocumentSemanticTokensRefreshFunc(context)
 	return &protocol.SemanticTokens{
 		Data: data,
 	}, nil

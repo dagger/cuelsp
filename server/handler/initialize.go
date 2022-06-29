@@ -3,8 +3,7 @@ package handler
 import (
 	"fmt"
 
-	"github.com/dagger/dlsp/scanner"
-	"github.com/dagger/dlsp/semantictoken"
+	"github.com/dagger/dlsp/semantic"
 	"github.com/dagger/dlsp/server/utils"
 	"github.com/dagger/dlsp/workspace"
 	"github.com/tliron/glsp"
@@ -79,8 +78,8 @@ func (h *Handler) capabilities() protocol.ServerCapabilities {
 	// Semantic tokens
 	capabilities.SemanticTokensProvider = &protocol.SemanticTokensOptions{
 		Legend: protocol.SemanticTokensLegend{
-			TokenTypes:     scanner.TokenKeys,
-			TokenModifiers: semantictoken.TokenModifierKeys,
+			TokenTypes:     semantic.TokenKeys,
+			TokenModifiers: semantic.TokenModifierKeys,
 		},
 		Range: false,
 		Full:  true,
