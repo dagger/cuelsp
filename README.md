@@ -5,7 +5,7 @@ Language Server implementation for [Dagger](https://github.com/dagger/dagger).
 ### Development & CI
 
 Current CI is using [Dagger](https://dagger.io) to lint, test and build the LSP.  
-So commands ran in the CI are the same in your local system :rocket:
+Using Dagger, commands running in the CI behave the same as on your local system :rocket:
 
 | Action       | Command           |
 |--------------|-------------------|
@@ -14,7 +14,7 @@ So commands ran in the CI are the same in your local system :rocket:
 | Build binary | `dagger do build` |
 
 > If you are on Mac M1, you should build binary using `go build -o dlsp` because Buildkit
-> do not support `darwin/arm64` platform.
+> does not support `darwin/arm64` platform.
 
 ### Capabilities
 
