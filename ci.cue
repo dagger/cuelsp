@@ -22,6 +22,9 @@ dagger.#Plan & {
 		"/tmp/cov.txt": write: {
 			contents: actions.test.coverage.export.files."/tmp/cov.txt"
 		}
+		"./bin": write: {
+			contents: actions.build.output
+		}
 	}
 
 	actions: {
