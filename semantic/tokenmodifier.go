@@ -50,7 +50,7 @@ func init() {
 
 // Retrieve token index in O(1), memory complexity O(n)
 // index is the position in the query grammar
-func tokenModifierIndex(index uint16) uint32 {
+func TokenModifierIndex(index uint16) uint32 {
 	val, ok := tokenModifierMap[index]
 	if !ok {
 		return 0

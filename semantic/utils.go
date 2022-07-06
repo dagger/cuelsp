@@ -56,5 +56,5 @@ func shiftTokens(tokens []protocol.UInteger, newToken []protocol.UInteger, cost 
 
 // untested
 func newToken(patternIndex uint16, n *sitter.Node) []protocol.UInteger {
-	return []uint32{0, 0, n.EndPoint().Column - n.StartPoint().Column, tokenTypeIndex(patternIndex), tokenModifierIndex(patternIndex)}
+	return []uint32{0, 0, n.EndPoint().Column - n.StartPoint().Column, TokenTypeIndex(patternIndex), TokenModifierIndex(patternIndex)}
 }

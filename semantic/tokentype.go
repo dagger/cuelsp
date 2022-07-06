@@ -90,7 +90,7 @@ func init() {
 
 // Retrieve token index in O(1), memory complexity O(n)
 // index is the position in the query grammar
-func tokenTypeIndex(index uint16) uint32 {
+func TokenTypeIndex(index uint16) uint32 {
 	val, ok := tokenMap[index]
 	if !ok {
 		return 0

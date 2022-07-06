@@ -30,3 +30,4 @@ func (r Range) String() string {
 	end := r.end.Position()
 	return fmt.Sprintf("%s: s[%d:%d]|e[%d:%d]", r.name, start.Line, start.Column, end.Line, end.Column)
 }
+
