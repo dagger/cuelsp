@@ -73,6 +73,6 @@ func (h *Handler) capabilities() protocol.ServerCapabilities {
 
 	// Jump to definition
 	capabilities.DefinitionProvider = true
-
+	capabilities.HoverProvider = true
 	return capabilities
 }
