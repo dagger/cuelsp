@@ -12,6 +12,7 @@ jobs:
   release:
     name: "Release dagger LSP"
     runs-on: ubuntu-latest
+    container: goreleaser/goreleaser-cross
     steps:
       - name: "Check out"
         uses: actions/checkout@v2
