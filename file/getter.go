@@ -2,7 +2,7 @@ package file
 
 import (
 	"cuelang.org/go/cue/ast"
-	"github.com/dagger/dlsp/parser"
+	"github.com/dagger/daggerlsp/parser"
 )
 
 func (f *File) Path() string {

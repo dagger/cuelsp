@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/dagger/dlsp/loader"
+	"github.com/dagger/daggerlsp/loader"
 	"github.com/stretchr/testify/assert"
 )
 
