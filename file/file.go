@@ -5,7 +5,7 @@ import (
 
 	"cuelang.org/go/cue/ast"
 	cueparser "cuelang.org/go/cue/parser"
-	"github.com/dagger/dlsp/parser"
+	"github.com/dagger/daggerlsp/parser"
 )
 
 // File is abstraction of a raw cue file

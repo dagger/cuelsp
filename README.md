@@ -2,6 +2,26 @@
 
 Language Server implementation for [Dagger](https://github.com/dagger/dagger).
 
+## Install
+
+### Releases
+
+Get the [latest released version](/grouville/dagger-lsp/releases/latest) and put it in your `$PATH`
+
+#### Linux
+```
+curl -L https://github.com/grouville/dagger-lsp/releases/download/v0.1.0/daggerlsp_0.1.0_linux_amd64.tar.gz | tar -xzC .
+sudo install daggerlsp /usr/local/bin/
+```
+
+### Latest from source
+
+You need to have [Go installed](https://go.dev/doc/install), and your `$(go env GOPATH)/bin` path should be in your `$PATH`.
+
+```
+go install github.com/grouville/dagger-lsp@latest
+```
+
 ### Development & CI
 
 Current CI is using [Dagger](https://dagger.io) to lint, test and build the LSP.  
@@ -50,5 +70,5 @@ git push origin vX.X.X
 
 ### Maintainers
 
-| [<img src="https://github.com/TomChv.png?size=85" /><br /><sub><b>Vasek</b></sub>](https://github.com/TomChv) | [<img src="https://github.com/grouville.png?size=85" /><br /><sub><b>Guillaume de Rouville</b></sub>](https://github.com/grouville) |
-| :---: | :---: |
+| [<img src="https://github.com/TomChv.png?size=85" /><br /><sub><b>Vasek</b></sub>](https://github.com/TomChv) | [<img src="https://github.com/grouville.png?size=85" /><br /><sub><b>Guillaume de Rouville</b></sub>](https://github.com/grouville) | [<img src="https://github.com/dolanor.png?size=85" /><br /><sub><b>Tanguy ⧓ Herrmann</b></sub>](https://github.com/dolanor) |
+| :---: | :---: | :---: |

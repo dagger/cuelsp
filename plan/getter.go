@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/dagger/dlsp/file"
+	"github.com/dagger/daggerlsp/file"
 )
 
 func (p *Plan) Files() map[string]*file.File {

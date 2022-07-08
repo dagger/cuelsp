@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/dagger/dlsp/server"
+	"github.com/dagger/daggerlsp/server"
 
 	_ "github.com/tliron/kutil/logging/simple"
 )
