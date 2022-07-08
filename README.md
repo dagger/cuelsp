@@ -50,6 +50,5 @@ git push origin vX.X.X
 
 ### Maintainers
 
-| [<img src="https://github.com/TomChv.png?size=85" width=85><br><sub>Vasek</sub>](https://github.com/TomChv)
-| [<img src="https://github.com/grouville.png?size=85" width=85><br><sub>Vasek</sub>](https://github.com/grouville) | :
----: | 
+| [<img src="https://github.com/TomChv.png?size=85" /><br /><sub><b>Vasek</b></sub>](https://github.com/TomChv) | [<img src="https://github.com/grouville.png?size=85" /><br /><sub><b>Guillaume de Rouville</b></sub>](https://github.com/grouville) |
+| :---: | :---: |
