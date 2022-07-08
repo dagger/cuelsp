@@ -6,7 +6,7 @@ Language Server implementation for [Dagger](https://github.com/dagger/dagger).
 
 ### Releases
 
-Get the [latest released version](/grouville/dagger-lsp/releases/latest) and put it in your `$PATH`
+Get the [latest released version](https://github.com/grouville/dagger-lsp/releases/latest) and put it in your `$PATH`
 
 #### Linux
 ```
