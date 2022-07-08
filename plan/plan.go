@@ -154,6 +154,41 @@ func (p *Plan) GetDefinition(path string, line, char int) (*loader.Value, error)
 	}
 }
 
+func (p *Plan) GetDoc(path string, line, char int) (*loader.Value, error) {
+	p.log.Debugf("Looking for file: %s", path)
+
+	p.muFiles.RLock()
+	defer p.muFiles.RUnlock()
+
+	f, ok := p.files[path]
+	if !ok {
+		return nil, fmt.Errorf("file not registered")
+	}
+
+	p.log.Debugf("Looking for def in %s at {%d, %d}", path, line, char)
+	def, err := f.Defs().Find(line, char)
+	if err != nil {
+		return nil, err
+	}
+
+	p.log.Debugf("Searching for %s in value", def)
+
+	_def := internal.StringToDef(def)
+
+	p.log.Debugf("%#v", _def)
+	if !_def.IsImported() {
+		// Look definition in current plan
+		return p.instance.GetDefinition(_def.Def())
+	} else {
+		i, found := p.imports[_def.Pkg()]
+		if !found {
+			return nil, fmt.Errorf("imported package %s not registered in plan", _def.Def())
+		}
+
+		return i.GetValue()
+	}
+}
+
 // Reload will rebuild the cue value
 func (p *Plan) Reload() error {
 	var (
