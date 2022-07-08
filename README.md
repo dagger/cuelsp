@@ -22,6 +22,12 @@ You need to have [Go installed](https://go.dev/doc/install), and your `$(go env 
 go install github.com/grouville/dagger-lsp@latest
 ```
 
+## Use in your IDE
+
+### vim
+
+[Documentation](/docs/vim.md)
+
 ### Development & CI
 
 Current CI is using [Dagger](https://dagger.io) to lint, test and build the LSP.  
