@@ -70,10 +70,9 @@ Structure
 
 #### Type
 #Struct: {
-  bar: string
+	bar: string
 
-  foo: *true | bool
-
+	foo: *true | bool
 }`,
 		},
 		{
@@ -91,12 +90,11 @@ multiline
 
 #### Type
 #StructWithDoc: {
-  // first field
-  bar: string
+	// first field
+	bar: string
 
-  // second field
-  foo: number | [...number]
-
+	// second field
+	foo: number | [...number]
 }`,
 		},
 		{
@@ -114,12 +112,11 @@ with reference to a definition
 
 #### Type
 #ReferenceToStruct: {
-  // Multi line field doc
-  // reference to a def
-  ref: #Struct
+	// Multi line field doc
+	// reference to a def
+	ref: #Struct
 
-  enum: "hello" | "world" | string
-
+	enum: "hello" | "world" | string
 }`,
 		},
 		{
@@ -142,7 +139,58 @@ by a special filesystem mount designed to minimize leak risk.
 
 #### Type
 #Secret: {
-$dagger: secret: _id: string
+	$dagger: secret: _id: string
+}`,
+		},
+		{
+			name: "dagger type complex",
+			root: TestSourceDir,
+			file: "./main.cue",
+			def: Def{
+				path: "_#clientCommand",
+				line: 49,
+				char: 1,
+			},
+			expect: `#### Description
+Complex command
+
+#### Type
+_#clientCommand: {
+	$dagger: task: _name: "ClientCommand"
+
+	// Name of the command to execute
+	// Examples: "ls", "/bin/bash"
+	name: string
+
+	// Positional arguments to the command
+	// Examples: ["/tmp"]
+	args: [...string]
+
+	// Command-line flags represented in a civilized form
+	// Example: {"-l": true, "-c": "echo hello world"}
+	flags: [string]: bool | string
+
+	// Environment variables
+	// Example: {"DEBUG": "1"}
+	env: [string]: string | #Secret
+
+	// Capture standard output (as a string or secret)
+	stdout?: {
+		@dagger(generated)
+		*string | #Secret
+	}
+
+	// Capture standard error (as a string or secret)
+	stderr?: {
+		@dagger(generated)
+		*string | #Secret
+	}
+
+	// Inject standard input (from a string or secret)
+	stdin?: {
+		@dagger(generated)
+		string | #Secret
+	}
 }`,
 		},
 	}

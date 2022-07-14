@@ -44,3 +44,42 @@ package main
 #Secret: {
 	$dagger: secret: _id: string
 }
+
+// Complex command
+_#clientCommand: {
+	$dagger: task: _name: "ClientCommand"
+
+	// Name of the command to execute
+	// Examples: "ls", "/bin/bash"
+	name: string
+
+	// Positional arguments to the command
+	// Examples: ["/tmp"]
+	args: [...string]
+
+	// Command-line flags represented in a civilized form
+	// Example: {"-l": true, "-c": "echo hello world"}
+	flags: [string]: bool | string
+
+	// Environment variables
+	// Example: {"DEBUG": "1"}
+	env: [string]: string | #Secret
+
+	// Capture standard output (as a string or secret)
+	stdout?: {
+		@dagger(generated)
+		*string | #Secret
+	}
+
+	// Capture standard error (as a string or secret)
+	stderr?: {
+		@dagger(generated)
+		*string | #Secret
+	}
+
+	// Inject standard input (from a string or secret)
+	stdin?: {
+		@dagger(generated)
+		string | #Secret
+	}
+}

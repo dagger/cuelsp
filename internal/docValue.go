@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"log"
-	"reflect"
 	"strings"
 
 	"cuelang.org/go/cue/ast"
@@ -36,20 +35,10 @@ func NewDocValue(node ast.Node, v *loader.Value) *DocValue {
 func customerFormatNode(node ast.Node, depth int) string {
 	var doc string
 
-	cleanDisplay := func(str string) string {
-		if depth > 0 && !strings.Contains(str, "\t") {
-			str = fmt.Sprintf("\t%s", str)
-		}
-
-		cleanTab := strings.ReplaceAll(str, "\t", "  ")
-		cleanReturn := strings.ReplaceAll(cleanTab, "\n", "\n  ")
-		return cleanReturn
-	}
-
 	formatNode := func(n ast.Node) string {
 		display, err := format.Node(n, format.Simplify())
 		if err == nil {
-			return fmt.Sprintf("%s\n\n", cleanDisplay(string(display)))
+			return string(display)
 		}
 		return "unknown"
 	}
@@ -65,9 +54,10 @@ func customerFormatNode(node ast.Node, depth int) string {
 
 		case *ast.UnaryExpr, *ast.BinaryExpr:
 			return formatNode(n)
+		case *ast.StructLit:
+			return fmt.Sprintf("%s: %s", n.Label, formatNode(v))
 		default:
-			log.Println(reflect.TypeOf(v))
-			doc += fmt.Sprintf("%s: {\n%s}", n.Label, customerFormatNode(v, depth+1))
+			doc += fmt.Sprintf("%s: {TEST\n%s}", n.Label, customerFormatNode(v, depth+1))
 		}
 	case *ast.StructLit:
 		for _, d := range n.Elts {
@@ -87,6 +77,38 @@ func (d *DocValue) String() string {
 
 	if d.structure != "" {
 		doc += fmt.Sprintf("#### Type\n%s", d.structure)
+	}
+
+	return doc
+}
+
+func (d *DocValue) MarkdownString() string {
+	var doc string
+
+	if d.description != "" {
+		doc = fmt.Sprintf("#### Description\n%s", d.description)
+	}
+
+	if d.structure != "" {
+		doc += fmt.Sprintf("#### Type\n")
+
+		structure := d.structure
+
+		// Insert carrier return if it's a definition
+		structure = strings.Replace(structure, ": {", ": {\n\n", 1)
+
+		// Insert tab on each fields in a definition
+		if strings.Index(structure, ": {") < strings.Index(structure, "\n") {
+			lines := strings.Split(structure, "\n")
+			for i := 1; i < len(lines)-1; i++ {
+				lines[i] = fmt.Sprintf("\t%s", lines[i])
+			}
+			structure = strings.Join(lines, "\n")
+		} else {
+			log.Println("not sturct")
+		}
+
+		doc += structure
 	}
 
 	return doc

@@ -40,7 +40,7 @@ func (h *Handler) documentHover(_ *glsp.Context, params *protocol.HoverParams) (
 	return &protocol.Hover{
 		Contents: protocol.MarkupContent{
 			Kind:  protocol.MarkupKindMarkdown,
-			Value: doc.String(),
+			Value: doc.MarkdownString(),
 		},
 	}, nil
 }
