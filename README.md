@@ -10,7 +10,7 @@ Get the [latest released version](https://github.com/grouville/dagger-lsp/releas
 
 #### Linux
 ```
-curl -L https://github.com/grouville/dagger-lsp/releases/download/v0.1.0/daggerlsp_0.1.0_linux_amd64.tar.gz | tar -xzC .
+curl -L https://github.com/dagger/daggerlsp/releases/download/v0.1.0/daggerlsp_0.1.0_linux_amd64.tar.gz | tar -xzC .
 sudo install daggerlsp /usr/local/bin/
 ```
 
@@ -19,7 +19,7 @@ sudo install daggerlsp /usr/local/bin/
 You need to have [Go installed](https://go.dev/doc/install), and your `$(go env GOPATH)/bin` path should be in your `$PATH`.
 
 ```
-go install github.com/grouville/dagger-lsp@latest
+go install github.com/dagger/daggerlsp@latest
 ```
 
 ## Use in your IDE
@@ -30,7 +30,7 @@ go install github.com/grouville/dagger-lsp@latest
 
 ### Development & CI
 
-Current CI is using [Dagger](https://dagger.io) to lint, test and build the LSP.  
+Current CI is using [Dagger](https://dagger.io) to lint, test and build the LSP.
 Using Dagger, commands running in the CI behave the same as on your local system :rocket:
 
 | Action       | Command           |
