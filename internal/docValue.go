@@ -90,7 +90,7 @@ func (d *DocValue) MarkdownString() string {
 	}
 
 	if d.structure != "" {
-		doc += fmt.Sprintf("#### Type\n")
+		doc += "#### Type\n"
 
 		structure := d.structure
 

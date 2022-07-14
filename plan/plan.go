@@ -154,6 +154,9 @@ func (p *Plan) GetDocDefinition(path string, line, char int) (*internal.DocValue
 	}
 
 	v, err := i.GetDefinition(def.Def())
+	if err != nil {
+		return nil, err
+	}
 
 	return internal.NewDocValue(node, v), nil
 }

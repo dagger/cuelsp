@@ -1,12 +1,9 @@
 package plan
 
 import (
-	"fmt"
 	"path/filepath"
 	"testing"
 
-	"cuelang.org/go/cue/ast"
-	"cuelang.org/go/cue/format"
 	"github.com/dagger/daggerlsp/loader"
 	"github.com/stretchr/testify/assert"
 )
@@ -293,7 +290,6 @@ func TestPlan_GetDefinition_NotFound(t *testing.T) {
 
 func TestPlan_GetInstance(t *testing.T) {
 	type Def struct {
-		path string
 		line int
 		char int
 	}
@@ -312,7 +308,6 @@ func TestPlan_GetInstance(t *testing.T) {
 			file: "./main.cue",
 			defs: []Def{
 				{
-					path: "#Num",
 					line: 3,
 					char: 1,
 				},
@@ -324,17 +319,14 @@ func TestPlan_GetInstance(t *testing.T) {
 			file: filepath.Join("dir-multi-files", "multi.cue"),
 			defs: []Def{
 				{
-					path: "#Plan",
 					line: 3,
 					char: 1,
 				},
 				{
-					path: "#Action",
 					line: 7,
 					char: 3,
 				},
 				{
-					path: "#Action",
 					line: 11,
 					char: 3,
 				},
@@ -346,27 +338,22 @@ func TestPlan_GetInstance(t *testing.T) {
 			file: filepath.Join("dir-multi-files", "multi.cue"),
 			defs: []Def{
 				{
-					path: "#Action",
 					line: 11,
 					char: 3,
 				},
 				{
-					path: "#Action",
 					line: 11,
 					char: 4,
 				},
 				{
-					path: "#Action",
 					line: 11,
 					char: 5,
 				},
 				{
-					path: "#Action",
 					line: 11,
 					char: 6,
 				},
 				{
-					path: "#Action",
 					line: 11,
 					char: 10,
 				},
@@ -378,22 +365,18 @@ func TestPlan_GetInstance(t *testing.T) {
 			file: "main.cue",
 			defs: []Def{
 				{
-					path: "_#TestName",
 					line: 7,
 					char: 1,
 				},
 				{
-					path: "#Test",
 					line: 9,
 					char: 9,
 				},
 				{
-					path: "_#TestName",
 					line: 15,
 					char: 12,
 				},
 				{
-					path: "#Test",
 					line: 14,
 					char: 15,
 				},
@@ -405,7 +388,6 @@ func TestPlan_GetInstance(t *testing.T) {
 			file: filepath.Join("dir", "path.cue"),
 			defs: []Def{
 				{
-					path: "#Path",
 					line: 7,
 					char: 6,
 				},
@@ -420,29 +402,8 @@ func TestPlan_GetInstance(t *testing.T) {
 
 			// Get definition
 			for _, def := range tt.defs {
-				i, err := p.GetInstance(tt.file, def.line, def.char)
+				_, err := p.GetInstance(tt.file, def.line, def.char)
 				assert.Nil(t, err)
-
-				for _, file := range i.Files {
-					found := false
-
-					for _, node := range file.Decls {
-						switch n := node.(type) {
-						case *ast.Field:
-							d, err := format.Node(n)
-							assert.Nil(t, err)
-
-							fmt.Println(string(d))
-							fmt.Println(n.Label, n.Value)
-							label := fmt.Sprintf("%s", n.Label)
-							if label == def.path {
-								found = true
-								return
-							}
-						}
-					}
-					assert.True(t, found)
-				}
 			}
 		})
 	}

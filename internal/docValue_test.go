@@ -201,6 +201,7 @@ _#clientCommand: {
 			assert.Nil(t, err)
 
 			doc, err := p.GetDocDefinition(tt.file, tt.def.line, tt.def.char)
+			assert.Nil(t, err)
 			assert.Equal(t, tt.expect, doc.String())
 		})
 	}
