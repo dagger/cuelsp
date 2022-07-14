@@ -28,7 +28,7 @@ func (h *Handler) documentHover(_ *glsp.Context, params *protocol.HoverParams) (
 
 	h.log.Debugf("Pos {%x, %x}", params.Position.Line, params.Position.Character)
 	h.log.Debugf("Find plan of %s", _uri.Filename())
-	def, err := p.GetDefinition(
+	doc, err := p.GetDocDefinition(
 		h.workspace.TrimRootPath(_uri.Filename()),
 		utils.UIntToInt(params.Position.Line),
 		utils.UIntToInt(params.Position.Character),
@@ -40,7 +40,7 @@ func (h *Handler) documentHover(_ *glsp.Context, params *protocol.HoverParams) (
 	return &protocol.Hover{
 		Contents: protocol.MarkupContent{
 			Kind:  protocol.MarkupKindMarkdown,
-			Value: utils.FormatDefinitionDoc(def),
+			Value: doc.String(),
 		},
 	}, nil
 }

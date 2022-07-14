@@ -115,11 +115,69 @@ func (p *Plan) loadImports() error {
 }
 
 // GetDefinition return a value following a path
-// TODO(TomChv): define path format
-// TODO(TomChv): Can be optimized with path, for instance
 // - `.#Foo` = definition in current plan
 // - `pkg.#Bar` = definition in package pkg
 func (p *Plan) GetDefinition(path string, line, char int) (*loader.Value, error) {
+	def, err := p.findDefInFile(path, line, char)
+	if err != nil {
+		return nil, err
+	}
+
+	p.log.Debugf("%#v", def)
+	if !def.IsImported() {
+		// Look definition in current plan
+		return p.instance.GetDefinition(def.Def())
+	} else {
+		i, found := p.imports[def.Pkg()]
+		if !found {
+			return nil, fmt.Errorf("imported package %s not registered in plan", def.Def())
+		}
+
+		return i.GetDefinition(def.Def())
+	}
+}
+
+func (p *Plan) GetDocDefinition(path string, line, char int) (*internal.DocValue, error) {
+	def, err := p.findDefInFile(path, line, char)
+	if err != nil {
+		return nil, err
+	}
+
+	i, err := p.GetInstance(path, line, char)
+	if err != nil {
+		return nil, err
+	}
+
+	node, err := i.GetNode(def.Def())
+	if err != nil {
+		return nil, err
+	}
+
+	v, err := i.GetDefinition(def.Def())
+
+	return internal.NewDocValue(node, v), nil
+}
+
+func (p *Plan) GetInstance(path string, line, char int) (*loader.Instance, error) {
+	def, err := p.findDefInFile(path, line, char)
+	if err != nil {
+		return nil, err
+	}
+
+	p.log.Debugf("%#v", def)
+	if !def.IsImported() {
+		return p.instance, nil
+	} else {
+		i, found := p.imports[def.Pkg()]
+		if !found {
+			return nil, fmt.Errorf("imported package %s not registered in plan", def.Def())
+		}
+
+		return i, nil
+	}
+}
+
+func (p *Plan) findDefInFile(path string, line, char int) (*internal.Definition, error) {
 	p.log.Debugf("Looking for file: %s", path)
 
 	p.muFiles.RLock()
@@ -138,20 +196,7 @@ func (p *Plan) GetDefinition(path string, line, char int) (*loader.Value, error)
 
 	p.log.Debugf("Searching for %s in value", def)
 
-	_def := internal.StringToDef(def)
-
-	p.log.Debugf("%#v", _def)
-	if !_def.IsImported() {
-		// Look definition in current plan
-		return p.instance.GetDefinition(_def.Def())
-	} else {
-		i, found := p.imports[_def.Pkg()]
-		if !found {
-			return nil, fmt.Errorf("imported package %s not registered in plan", _def.Def())
-		}
-
-		return i.GetDefinition(_def.Def())
-	}
+	return internal.StringToDef(def), nil
 }
 
 func (p *Plan) GetDoc(path string, line, char int) (*loader.Value, error) {
