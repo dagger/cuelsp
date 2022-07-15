@@ -6,7 +6,7 @@ Language Server implementation for [Dagger](https://github.com/dagger/dagger).
 
 ### Releases
 
-Get the [latest released version](https://github.com/grouville/dagger-lsp/releases/latest) and put it in your `$PATH`
+Get the [latest released version](https://github.com/dagger/daggerlsp/releases/latest) and put it in your `$PATH`
 
 #### Linux
 ```
@@ -44,18 +44,18 @@ Using Dagger, commands running in the CI behave the same as on your local system
 
 ### Capabilities
 
-| Feature                 | Supported          | Link to documentation               |
-|-------------------------|--------------------|-------------------------------------|
+| Feature                 | Supported          | Link to documentation                    |
+|-------------------------|--------------------|------------------------------------------|
 | Load cue plan           | :white_check_mark: | [how daggerlsp load CUE](./docs/load.md) |
 | Load multiples files    | :white_check_mark: | [how daggerlsp load CUE](./docs/load.md) |
-| Jump to CUE definition  | :white_check_mark: | [manage jump-to](./docs/jump-to.md) |
-| Syntax highlighting     | :hourglass:        |                                     |
-| Doc Hover               | :no_entry_sign:    |                                     |
-| Auto completion         | :no_entry_sign:    |                                     |
-| Jump to CUE keys        | :no_entry_sign:    |                                     |
-| Error highlighting      | :no_entry_sign:    |                                     |
-| Code snippet            | :no_entry_sign:    |                                     |
-| Optimization suggestion | :no_entry_sign:    |                                     |
+| Jump to CUE definition  | :white_check_mark: | [manage jump-to](./docs/jump-to.md)      |
+| Syntax highlighting     | :hourglass:        |                                          |
+| Doc Hover               | :no_entry_sign:    |                                          |
+| Auto completion         | :no_entry_sign:    |                                          |
+| Jump to CUE keys        | :no_entry_sign:    |                                          |
+| Error highlighting      | :no_entry_sign:    |                                          |
+| Code snippet            | :no_entry_sign:    |                                          |
+| Optimization suggestion | :no_entry_sign:    |                                          |
 
 ### Release
 
@@ -77,4 +77,4 @@ git push origin vX.X.X
 ### Maintainers
 
 | [<img src="https://github.com/TomChv.png?size=85" /><br /><sub><b>Vasek</b></sub>](https://github.com/TomChv) | [<img src="https://github.com/grouville.png?size=85" /><br /><sub><b>Guillaume de Rouville</b></sub>](https://github.com/grouville) | [<img src="https://github.com/dolanor.png?size=85" /><br /><sub><b>Tanguy ⧓ Herrmann</b></sub>](https://github.com/dolanor) |
-| :---: | :---: | :---: |
+|:-------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------:|
