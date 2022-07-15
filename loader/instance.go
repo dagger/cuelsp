@@ -3,6 +3,7 @@ package loader
 import (
 	"fmt"
 
+	"cuelang.org/go/cue/ast"
 	"cuelang.org/go/cue/build"
 	"cuelang.org/go/cue/cuecontext"
 )
@@ -87,6 +88,21 @@ func (i *Instance) GetDefinition(path string) (*Value, error) {
 	}
 
 	return v, nil
+}
+
+func (i *Instance) GetNode(def string) (ast.Node, error) {
+	for _, file := range i.Files {
+		for _, node := range file.Decls {
+			switch n := node.(type) {
+			case *ast.Field:
+				if fmt.Sprintf("%s", n.Label) == def {
+					return node, nil
+				}
+			}
+		}
+	}
+
+	return nil, fmt.Errorf("node %s not found", def)
 }
 
 func (i *Instance) String() string {

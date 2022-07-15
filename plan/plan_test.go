@@ -288,6 +288,127 @@ func TestPlan_GetDefinition_NotFound(t *testing.T) {
 	}
 }
 
+func TestPlan_GetInstance(t *testing.T) {
+	type Def struct {
+		line int
+		char int
+	}
+
+	type TestCase struct {
+		name string
+		root string
+		file string
+		defs []Def
+	}
+
+	testsCases := []TestCase{
+		{
+			name: "single definition",
+			root: TestSourceDir,
+			file: "./main.cue",
+			defs: []Def{
+				{
+					line: 3,
+					char: 1,
+				},
+			},
+		},
+		{
+			name: "directory with multi-files with multi values",
+			root: TestSourceDir,
+			file: filepath.Join("dir-multi-files", "multi.cue"),
+			defs: []Def{
+				{
+					line: 3,
+					char: 1,
+				},
+				{
+					line: 7,
+					char: 3,
+				},
+				{
+					line: 11,
+					char: 3,
+				},
+			},
+		},
+		{
+			name: "directory with multi-files - found in range",
+			root: TestSourceDir,
+			file: filepath.Join("dir-multi-files", "multi.cue"),
+			defs: []Def{
+				{
+					line: 11,
+					char: 3,
+				},
+				{
+					line: 11,
+					char: 4,
+				},
+				{
+					line: 11,
+					char: 5,
+				},
+				{
+					line: 11,
+					char: 6,
+				},
+				{
+					line: 11,
+					char: 10,
+				},
+			},
+		},
+		{
+			name: "file with cue.mod - private definitions and imported",
+			root: filepath.Join(TestSourceDir, "with-cue-mod"),
+			file: "main.cue",
+			defs: []Def{
+				{
+					line: 7,
+					char: 1,
+				},
+				{
+					line: 9,
+					char: 9,
+				},
+				{
+					line: 15,
+					char: 12,
+				},
+				{
+					line: 14,
+					char: 15,
+				},
+			},
+		},
+		{
+			name: "dir with cue.mod and merged values",
+			root: filepath.Join(TestSourceDir, "with-cue-mod"),
+			file: filepath.Join("dir", "path.cue"),
+			defs: []Def{
+				{
+					line: 7,
+					char: 6,
+				},
+			},
+		},
+	}
+
+	for _, tt := range testsCases {
+		t.Run(tt.name, func(t *testing.T) {
+			p, err := New(tt.root, tt.file)
+			assert.Nil(t, err)
+
+			// Get definition
+			for _, def := range tt.defs {
+				_, err := p.GetInstance(tt.file, def.line, def.char)
+				assert.Nil(t, err)
+			}
+		})
+	}
+}
+
 func TestPlan_AddFile(t *testing.T) {
 	type TestCase struct {
 		name      string
