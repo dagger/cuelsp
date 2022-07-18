@@ -105,7 +105,7 @@ func (d *DocValue) MarkdownString() string {
 			}
 			structure = strings.Join(lines, "\n")
 		} else {
-			log.Println("not sturct")
+			log.Println("not struct")
 		}
 
 		doc += structure
