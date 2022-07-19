@@ -30,6 +30,9 @@ func initScanner(URI string, log logging.Logger) (*sitter.Node, *Scanner, error)
 		startCol:  0,
 		code:      code,
 		logger:    log,
+		endLine:   0,
+		endCol:    0,
+		nodeType:  NodeType(OTHER),
 	}, nil
 }
 

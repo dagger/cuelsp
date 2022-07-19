@@ -6,10 +6,20 @@ import (
 	"github.com/tliron/kutil/logging"
 )
 
+type NodeType uint32
+
+const (
+	MULTILINE_STRING TokenType = iota
+	OTHER
+)
+
 type Scanner struct {
 	code      []byte
 	startLine uint32
 	startCol  uint32
+	endLine   uint32
+	endCol    uint32
+	nodeType  NodeType
 	tokens    []protocol.UInteger
 	logger    logging.Logger
 }
@@ -17,14 +27,22 @@ type Scanner struct {
 // Scan a QueryCapture and append the token to the scanner's tokens slice
 // => Normal case: append the token at the end of the tokens slice
 // => Edge case: append the token anywhere in the tokens slice ; update the token positions accordingly
+// If the token is a multiline string, append their children as arbitrary string tokens, and skip them in next iterations
 func (s *Scanner) Scan(patternIndex uint16, c sitter.QueryCapture) {
 	deltaLine := s.deltaLine(c)
 	deltaCol := s.deltaColumn(c, deltaLine)
+
+	if skip := s.skipMultilineStringChildren(c); skip {
+		return
+	}
 
 	switch {
 	case deltaLine >= 0 && deltaCol >= 0: // Normal case: append token at end of slice
 		s.append(deltaLine, deltaCol, c.Node, patternIndex)
 		s.updateTokenPos(c)
+		if isMultilineStringToken(c.Node.String()) {
+			s.appendArbitraryMultilineToken(c)
+		}
 
 	case deltaLine == 0 && deltaCol < 0: // Edge case: append current token anywhere in token slice
 		tokenArr := s.newToken(patternIndex, c.Node, s.code)
@@ -90,4 +108,55 @@ func (s *Scanner) deltaColumn(c sitter.QueryCapture, deltaLine int) float64 {
 // => current token becomes the old token for next iteration
 func (s *Scanner) updateTokenPos(c sitter.QueryCapture) {
 	s.startLine, s.startCol = c.Node.StartPoint().Row, c.Node.StartPoint().Column
+	s.endLine, s.endCol = c.Node.EndPoint().Row, c.Node.EndPoint().Column
+	s.nodeType = NodeType(OTHER)
+}
+
+// Append arbitrary multiline token, representing the children of a multiline string token
+func (s *Scanner) appendArbitraryMultilineToken(c sitter.QueryCapture) {
+	for i := 0; i < s.deltaEndLine(c); i++ {
+		s.tokens = append(
+			s.tokens,
+			uint32(1),      // token exists in a new line
+			uint32(0),      // start at col 0
+			200,            // token has arbitrary len of 200
+			uint32(STRING), // Token of string type
+			0,
+		)
+	}
+	s.updateMultilineTokenPos(c)
+}
+
+// Delta of lines between end and start positions of current token
+func (s *Scanner) deltaEndLine(c sitter.QueryCapture) int {
+	return int(c.Node.EndPoint().Row) - int(c.Node.StartPoint().Row)
+}
+
+// Update token position to Ending position of multiline token
+func (s *Scanner) updateMultilineTokenPos(c sitter.QueryCapture) {
+	s.startLine, s.startCol = c.Node.EndPoint().Row, c.Node.EndPoint().Column
+	s.endLine, s.endCol = c.Node.EndPoint().Row, c.Node.EndPoint().Column
+	s.nodeType = NodeType(MULTILINE_STRING)
+}
+
+// Check if we need to current token as part of multiline tokens
+func (s *Scanner) skipMultilineStringChildren(c sitter.QueryCapture) bool {
+	if s.nodeType == NodeType(MULTILINE_STRING) {
+		if s.isInsideMultilineByRow(c) || s.isInsideMultilineByCol(c) {
+			return true
+		} else if !s.isInsideMultilineByCol(c) {
+			s.nodeType = NodeType(OTHER)
+		}
+	}
+	return false
+}
+
+// Check if current token is inside a multiline string
+func (s *Scanner) isInsideMultilineByRow(c sitter.QueryCapture) bool {
+	return c.Node.EndPoint().Row < s.endLine
+}
+
+// Check if current token is inside a multiline string
+func (s *Scanner) isInsideMultilineByCol(c sitter.QueryCapture) bool {
+	return c.Node.EndPoint().Row == s.endLine && c.Node.EndPoint().Column <= s.endCol
 }

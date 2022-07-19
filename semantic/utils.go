@@ -3,6 +3,7 @@ package semantic
 import (
 	"io/ioutil"
 	"math"
+	"strings"
 
 	protocol "github.com/tliron/glsp/protocol_3_16"
 	"github.com/tliron/kutil/logging"
@@ -68,4 +69,9 @@ func readFile(filename string, logger logging.Logger) ([]byte, error) {
 		return nil, err
 	}
 	return data, nil
+}
+
+// Checks whether a token is a is multiline string
+func isMultilineStringToken(node string) bool {
+	return strings.HasPrefix(node, "(multiline_string_lit")
 }
