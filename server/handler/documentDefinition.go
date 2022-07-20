@@ -20,12 +20,12 @@ func (h *Handler) documentDefinition(_ *glsp.Context, params *protocol.Definitio
 
 	_uri, err := uri.Parse(params.TextDocument.URI)
 	if err != nil {
-		return nil, err
+		return nil, h.wrapError(err)
 	}
 
 	p := h.workspace.GetPlan(_uri.Filename())
 	if p == nil {
-		return nil, fmt.Errorf("plan not found")
+		return nil, h.wrapError(fmt.Errorf("plan not found"))
 	}
 
 	h.log.Debugf("Pos {%x, %x}", params.Position.Line, params.Position.Character)
@@ -36,7 +36,7 @@ func (h *Handler) documentDefinition(_ *glsp.Context, params *protocol.Definitio
 		utils.UIntToInt(params.Position.Character),
 	)
 	if err != nil {
-		return nil, err
+		return nil, h.wrapError(err)
 	}
 
 	h.log.Debugf("Position: %#v", location.Pos().Position())

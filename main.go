@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	s := server.New()
+	s := server.New(server.DEV)
 
 	if err := s.Run(); err != nil {
 		panic(err)

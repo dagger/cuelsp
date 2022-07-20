@@ -23,16 +23,23 @@ const (
 	Version = "0.0.1"
 )
 
+type Mode handler.Mode
+
+const (
+	DEV Mode = iota
+	PROD
+)
+
 // New initializes a new language protocol server that contains his logger
 // and his handler
-func New() *LSP {
+func New(mode Mode) *LSP {
 	// This increases logging verbosity (optional)
 	// logTo := "/tmp/daggerlsp.log"
 	// logging.Configure(2, &logTo)
-	logging.Configure(2, nil)
+	logging.Configure(0, nil)
 	log := logging.GetLogger(Name)
 
-	h := handler.New(Name, Version, log)
+	h := handler.New(Name, Version, log, handler.Mode(mode))
 	return &LSP{
 		log:     log,
 		handler: h,

@@ -22,7 +22,7 @@ func (h *Handler) initialize(_ *glsp.Context, params *protocol.InitializeParams)
 	}
 
 	if err := h.initWorkspace(params.WorkspaceFolders, params.RootURI, params.RootPath); err != nil {
-		return nil, err
+		return nil, h.wrapError(err)
 	}
 
 	return protocol.InitializeResult{
