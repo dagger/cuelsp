@@ -114,6 +114,19 @@ func (p *Plan) loadImports() error {
 	return nil
 }
 
+func (p *Plan) loadFiles() error {
+	for path := range p.files {
+		f, err := file.New(filepath.Join(p.rootPath, path))
+		if err != nil {
+			return err
+		}
+
+		p.files[path] = f
+	}
+
+	return nil
+}
+
 // GetDefinition return a value following a path
 // - `.#Foo` = definition in current plan
 // - `pkg.#Bar` = definition in package pkg
@@ -269,6 +282,10 @@ func (p *Plan) Reload() error {
 	}
 
 	if err := p.instance.LoadDefinitions(); err != nil {
+		return err
+	}
+
+	if err := p.loadFiles(); err != nil {
 		return err
 	}
 
