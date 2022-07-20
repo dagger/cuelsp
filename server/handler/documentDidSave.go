@@ -19,16 +19,16 @@ func (h *Handler) documentDidSave(context *glsp.Context, params *protocol.DidSav
 
 	_uri, err := uri.Parse(params.TextDocument.URI)
 	if err != nil {
-		return err
+		return h.wrapError(err)
 	}
 
 	p := h.workspace.GetPlan(_uri.Filename())
 	if p == nil {
-		return fmt.Errorf("plan not found")
+		return h.wrapError(fmt.Errorf("plan not found"))
 	}
 
 	if err := p.Reload(); err != nil {
-		return err
+		return h.wrapError(err)
 	}
 
 	return nil

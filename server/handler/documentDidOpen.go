@@ -14,11 +14,11 @@ func (h *Handler) documentDidOpen(_ *glsp.Context, params *protocol.DidOpenTextD
 
 	_uri, err := uri.Parse(params.TextDocument.URI)
 	if err != nil {
-		return err
+		return h.wrapError(err)
 	}
 
 	if err := h.workspace.AddPlan(_uri.Filename()); err != nil {
-		return err
+		return h.wrapError(err)
 	}
 
 	return nil

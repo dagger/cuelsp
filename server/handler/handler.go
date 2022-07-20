@@ -9,6 +9,13 @@ import (
 	"github.com/tliron/kutil/logging"
 )
 
+type Mode int
+
+const (
+	DEV Mode = iota
+	PROD
+)
+
 // Handler is the storage for any handler of the server.LSP.
 // It also handles a single workspace for now which represent a VSCode project
 type Handler struct {
@@ -21,15 +28,18 @@ type Handler struct {
 	lsName string
 
 	lsVersion string
+
+	mode Mode
 }
 
 // New creates a Handler instance that contains all methods supported by
 // the LSP
-func New(lsName, lsVersion string, log logging.Logger) *Handler {
+func New(lsName, lsVersion string, log logging.Logger, mode Mode) *Handler {
 	h := &Handler{
 		lsName:    lsName,
 		lsVersion: lsVersion,
 		log:       logging.NewScopeLogger(log, "workspace"),
+		mode:      mode,
 	}
 
 	h.handler = &protocol.Handler{
