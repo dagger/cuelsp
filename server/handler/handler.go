@@ -51,6 +51,8 @@ func New(lsName, lsVersion string, log logging.Logger, mode Mode) *Handler {
 		TextDocumentDidOpen:    h.documentDidOpen,
 		TextDocumentDefinition: h.documentDefinition,
 		TextDocumentHover:      h.documentHover,
+		TextDocumentDidChange:  h.documentDidChange,
+		TextDocumentDidClose:   h.documentDidClose,
 	}
 
 	return h
