@@ -8,10 +8,8 @@ const (
 )
 
 func (m Mode) IsProd() bool {
-	switch m {
-	case ModeProd:
+	if m == ModeProd {
 		return true
-	default:
-		return false
 	}
+	return false
 }
