@@ -37,7 +37,7 @@ CI behave the same as on your local system :rocket:
 | Load multiples files    | :white_check_mark: | [how dagger lsp load CUE](./docs/load.md) |
 | Jump to CUE definition  | :white_check_mark: | [manage jump-to](./docs/jump-to.md)       |
 | Syntax highlighting     | :hourglass:        |                                           |
-| Doc Hover               | :no_entry_sign:    |                                           |
+| Doc Hover               | :white_check_mark: |                                           |
 | Auto completion         | :no_entry_sign:    |                                           |
 | Jump to CUE keys        | :no_entry_sign:    |                                           |
 | Error highlighting      | :no_entry_sign:    |                                           |
