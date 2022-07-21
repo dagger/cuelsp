@@ -1,6 +1,6 @@
 resources:
-  - deployment.yaml
-  - pod.yaml
+- deployment.yaml
+- pod.yaml
 images:
   - name: "nginx"
     newTag: "v1"

@@ -1,6 +1,7 @@
+
 - name: Install dependencies
-  apk:
-    update_cache: yes
+  apk: 
+    update_cache: yes 
     state: latest
     name:
       - git

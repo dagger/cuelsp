@@ -8,12 +8,18 @@ Dagger LSP is a subcommand on the Dagger CLI: `dagger lsp`
 
 Ensure that you have `dagger v0.2.26` or newer installed. [This is how you can install `dagger`](https://docs.dagger.io/install).
 
+### Standalone binary
+
+In case you need a stand-alone binary you can install it locally by using
+`go install github.com/dagger/daggerlsp/cmd/dagger_cue_lsp@latest`
+
+
 ## Configure your code editor
 
-| Code Editor | Documentation                                            |
-| :---------: | :------------------------------------------------------: |
-| VS Code     | [Extension](https://github.com/dagger/vscode-dagger)     |
-| Vim         | [Guide](./docs/vim.md)                                   |
+| Code Editor |                    Documentation                     |
+|:-----------:|:----------------------------------------------------:|
+|   VS Code   | [Extension](https://github.com/dagger/vscode-dagger) |
+|     Vim     |                [Guide](./docs/vim.md)                |
 
 ### Capabilities
 
