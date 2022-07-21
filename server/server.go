@@ -25,22 +25,6 @@ const (
 	Version = "0.0.1"
 )
 
-type Mode int
-
-const (
-	ModeProd Mode = iota
-	ModeDev
-)
-
-func (m Mode) IsProd() bool {
-	switch m {
-	case ModeProd:
-		return true
-	default:
-		return false
-	}
-}
-
 // New initializes a new language protocol server that contains his logger
 // and his handler
 func New(mode Mode) (*LSP, error) {
