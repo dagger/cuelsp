@@ -5,17 +5,17 @@ It was tested in [vim-lsp](https://github.com/prabirshrestha/vim-lsp)
 
 ## Dagger CUE LSP
 
-### install
+### Install
 
 Refer to [this documentation](/README.md#install)
 
 ## vim-lsp
 
-### install
+### Install
 
 Refer to [this documentation](https://github.com/prabirshrestha/vim-lsp#installing)
 
-### configure
+### Configure
 
 Add this to your `.vimrc`
 ```

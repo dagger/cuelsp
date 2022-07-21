@@ -4,34 +4,21 @@ Language Server implementation for [Dagger](https://github.com/dagger/dagger).
 
 ## Install
 
-### Releases
+Dagger LSP is part of the Dagger CLI, so you just need to configure your IDE to start it.
 
-Get the [latest released version](https://github.com/dagger/daggerlsp/releases/latest) and put it in your `$PATH`
+:bulb: If you have not already installed dagger, go to [installation guide](https://docs.dagger.io/install).
 
-#### Linux
-```
-curl -L https://github.com/dagger/daggerlsp/releases/download/v0.1.0/daggerlsp_0.1.0_linux_amd64.tar.gz | tar -xzC .
-sudo install daggerlsp /usr/local/bin/
-```
+## Use it in your IDE
 
-### Latest from source
-
-You need to have [Go installed](https://go.dev/doc/install), and your `$(go env GOPATH)/bin` path should be in your `$PATH`.
-
-```
-go install github.com/dagger/daggerlsp@latest
-```
-
-## Use in your IDE
-
-### vim
-
-[Documentation](/docs/vim.md)
+|   IDE    |                     Documentation                      |
+|:--------:|:------------------------------------------------------:|
+|  VSCode  |  [Extension](https://github.com/dagger/vscode-dagger)  |
+|   Vim    |                 [Guide](./docs/vim.md)                 |
 
 ### Development & CI
 
-Current CI is using [Dagger](https://dagger.io) to lint, test and build the LSP.
-Using Dagger, commands running in the CI behave the same as on your local system :rocket:
+Current CI is using [Dagger](https://dagger.io) to lint, test and build the LSP. Using Dagger, commands running in the
+CI behave the same as on your local system :rocket:
 
 | Action       | Command           |
 |--------------|-------------------|
@@ -44,18 +31,18 @@ Using Dagger, commands running in the CI behave the same as on your local system
 
 ### Capabilities
 
-| Feature                 | Supported          | Link to documentation                    |
-|-------------------------|--------------------|------------------------------------------|
-| Load cue plan           | :white_check_mark: | [how daggerlsp load CUE](./docs/load.md) |
-| Load multiples files    | :white_check_mark: | [how daggerlsp load CUE](./docs/load.md) |
-| Jump to CUE definition  | :white_check_mark: | [manage jump-to](./docs/jump-to.md)      |
-| Syntax highlighting     | :hourglass:        |                                          |
-| Doc Hover               | :no_entry_sign:    |                                          |
-| Auto completion         | :no_entry_sign:    |                                          |
-| Jump to CUE keys        | :no_entry_sign:    |                                          |
-| Error highlighting      | :no_entry_sign:    |                                          |
-| Code snippet            | :no_entry_sign:    |                                          |
-| Optimization suggestion | :no_entry_sign:    |                                          |
+| Feature                 | Supported          | Link to documentation                     |
+|-------------------------|--------------------|-------------------------------------------|
+| Load cue plan           | :white_check_mark: | [how dagger lsp load CUE](./docs/load.md) |
+| Load multiples files    | :white_check_mark: | [how dagger lsp load CUE](./docs/load.md) |
+| Jump to CUE definition  | :white_check_mark: | [manage jump-to](./docs/jump-to.md)       |
+| Syntax highlighting     | :hourglass:        |                                           |
+| Doc Hover               | :no_entry_sign:    |                                           |
+| Auto completion         | :no_entry_sign:    |                                           |
+| Jump to CUE keys        | :no_entry_sign:    |                                           |
+| Error highlighting      | :no_entry_sign:    |                                           |
+| Code snippet            | :no_entry_sign:    |                                           |
+| Optimization suggestion | :no_entry_sign:    |                                           |
 
 ### Release
 
@@ -64,7 +51,7 @@ Dagger LSP is versioned through tagged release.
 There is a complete [release workflow](./.github/workflows/release.yaml) to populate Dagger LSP binary in multiple
 platforms.
 
-To publish a new release, just create a new tag
+To publish a new release, we just create a new tag.
 
 ```shell
 # Tag current commit
