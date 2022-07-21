@@ -4,7 +4,6 @@ go 1.17
 
 require (
 	cuelang.org/go v0.4.3
-	github.com/smacker/go-tree-sitter v0.0.0-20220628134258-ac06e95cfa11
 	github.com/tliron/kutil v0.1.60
 	go.lsp.dev/uri v0.3.0
 )

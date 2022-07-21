@@ -15,8 +15,6 @@ func (h *Handler) documentDidSave(context *glsp.Context, params *protocol.DidSav
 	h.log.Debugf("Document saved")
 	h.log.Debugf("params: %#v", params)
 
-	go context.Call(protocol.MethodWorkspaceSemanticTokensRefresh, nil, nil)
-
 	_uri, err := uri.Parse(params.TextDocument.URI)
 	if err != nil {
 		return h.wrapError(err)

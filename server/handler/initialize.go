@@ -3,7 +3,6 @@ package handler
 import (
 	"fmt"
 
-	"github.com/dagger/daggerlsp/semantic"
 	"github.com/dagger/daggerlsp/server/utils"
 	"github.com/dagger/daggerlsp/workspace"
 	"github.com/tliron/glsp"
@@ -91,16 +90,6 @@ func (h *Handler) capabilities() protocol.ServerCapabilities {
 	// Jump to definition
 	capabilities.DefinitionProvider = true
 	capabilities.HoverProvider = true
-
-	// Semantic tokens
-	capabilities.SemanticTokensProvider = &protocol.SemanticTokensOptions{
-		Legend: protocol.SemanticTokensLegend{
-			TokenTypes:     semantic.TokenKeys,
-			TokenModifiers: semantic.TokenModifierKeys,
-		},
-		Range: false,
-		Full:  true,
-	}
 
 	return capabilities
 }
