@@ -36,7 +36,11 @@ func New(mode Mode) *LSP {
 	// This increases logging verbosity (optional)
 	// logTo := "/tmp/daggerlsp.log"
 	// logging.Configure(2, &logTo)
-	logging.Configure(0, nil)
+	if mode == DEV {
+		logging.Configure(2, nil)
+	} else {
+		logging.Configure(0, nil)
+	}
 	log := logging.GetLogger(Name)
 
 	h := handler.New(Name, Version, log, handler.Mode(mode))
