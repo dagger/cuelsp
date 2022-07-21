@@ -19,10 +19,10 @@ Refer to [this documentation](https://github.com/prabirshrestha/vim-lsp#installi
 
 Add this to your `.vimrc`
 ```
-if executable('daggerlsp')
+if executable('dagger')
     au User lsp_setup call lsp#register_server({
-        \ 'name': 'daggerlsp',
-        \ 'cmd': {server_info->['daggerlsp']},
+        \ 'name': 'dagger_cue_lsp',
+        \ 'cmd': {server_info->['dagger', 'lsp']},
         \ 'allowlist': ['cue'],
         \ })
 endif
