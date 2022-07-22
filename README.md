@@ -42,7 +42,7 @@ CI behave the same as on your local system :rocket:
 | Build binary | `dagger do build` |
 
 > If you are on Mac M1, you should build binary using `go build -o daggerlsp` because Buildkit
-> does not support `darwin/arm64` platform.
+> does not support `darwin/arm64` platform, yet.
 
 ### Release
 
