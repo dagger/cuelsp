@@ -4,16 +4,31 @@ Language Server implementation for [Dagger](https://github.com/dagger/dagger).
 
 ## Install
 
-Dagger LSP is part of the Dagger CLI, so you just need to configure your IDE to start it.
+Dagger LSP is a subcommand on the Dagger CLI: `dagger lsp`
 
-:bulb: If you have not already installed dagger, go to [installation guide](https://docs.dagger.io/install).
+Ensure that you have `dagger v0.2.26` or newer installed. [This is how you can install `dagger`](https://docs.dagger.io/install).
 
-## Use it in your IDE
+## Configure your code editor
 
-|   IDE    |                     Documentation                      |
-|:--------:|:------------------------------------------------------:|
-|  VSCode  |  [Extension](https://github.com/dagger/vscode-dagger)  |
-|   Vim    |                 [Guide](./docs/vim.md)                 |
+| Code Editor | Documentation                                            |
+| :---------: | :------------------------------------------------------: |
+| VS Code     | [Extension](https://github.com/dagger/vscode-dagger)     |
+| Vim         | [Guide](./docs/vim.md)                                   |
+
+### Capabilities
+
+| Feature                 | Supported          | Link to documentation                     |
+|-------------------------|--------------------|-------------------------------------------|
+| Load cue plan           | :white_check_mark: | [how dagger lsp load CUE](./docs/load.md) |
+| Load multiples files    | :white_check_mark: | [how dagger lsp load CUE](./docs/load.md) |
+| Jump to CUE definition  | :white_check_mark: | [manage jump-to](./docs/jump-to.md)       |
+| Doc Hover               | :white_check_mark: |                                           |
+| Syntax highlighting     | :hourglass:        |                                           |
+| Auto completion         | :no_entry_sign:    |                                           |
+| Jump to CUE keys        | :no_entry_sign:    |                                           |
+| Error highlighting      | :no_entry_sign:    |                                           |
+| Code snippet            | :no_entry_sign:    |                                           |
+| Optimization suggestion | :no_entry_sign:    |                                           |
 
 ### Development & CI
 
@@ -27,22 +42,7 @@ CI behave the same as on your local system :rocket:
 | Build binary | `dagger do build` |
 
 > If you are on Mac M1, you should build binary using `go build -o daggerlsp` because Buildkit
-> does not support `darwin/arm64` platform.
-
-### Capabilities
-
-| Feature                 | Supported          | Link to documentation                     |
-|-------------------------|--------------------|-------------------------------------------|
-| Load cue plan           | :white_check_mark: | [how dagger lsp load CUE](./docs/load.md) |
-| Load multiples files    | :white_check_mark: | [how dagger lsp load CUE](./docs/load.md) |
-| Jump to CUE definition  | :white_check_mark: | [manage jump-to](./docs/jump-to.md)       |
-| Syntax highlighting     | :hourglass:        |                                           |
-| Doc Hover               | :white_check_mark: |                                           |
-| Auto completion         | :no_entry_sign:    |                                           |
-| Jump to CUE keys        | :no_entry_sign:    |                                           |
-| Error highlighting      | :no_entry_sign:    |                                           |
-| Code snippet            | :no_entry_sign:    |                                           |
-| Optimization suggestion | :no_entry_sign:    |                                           |
+> does not support `darwin/arm64` platform, yet.
 
 ### Release
 
