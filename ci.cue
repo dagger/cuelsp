@@ -31,7 +31,8 @@ dagger.#Plan & {
 		_code: client.filesystem.".".read.contents
 
 		build: go.#Build & {
-			source: _code
+			source:  _code
+			package: "github.com/dagger/daggerlsp/cmd/dagger_cue_lsp"
 		}
 
 		test: {

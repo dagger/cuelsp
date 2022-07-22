@@ -26,8 +26,7 @@ This table compares Dagger core packages, Dagger Universe packages, and the over
 
 *Import path: [`universe.dagger.io/docker`](./docker)*
 
-The `docker` package is a native Cue API for Docker. You can use it to build, run, push and pull Docker containers
-directly from Cue.
+The `docker` package is a native Cue API for Docker. You can use it to build, run, push and pull Docker containers directly from Cue.
 
 The Dagger container API defines the following types:
 
@@ -41,16 +40,13 @@ The Dagger container API defines the following types:
 
 *Import path: [`universe.dagger.io/examples`](./examples)*
 
-This package contains examples of complete Dagger configurations, including the result of following tutorials in the
-documentations.
+This package contains examples of complete Dagger configurations, including the result of following tutorials in the documentations.
 
-For example, [the todoapp example](./examples/todoapp) corresponds to
-the [Getting Started tutorial](https://docs.dagger.io/1003/get-started/)
+For example, [the todoapp example](./examples/todoapp) corresponds to the [Getting Started tutorial](https://docs.dagger.io/1003/get-started/)
 
 ## Coding Style
 
-When contributing, please follow the guidelines from
-the [Package Coding Style](https://docs.dagger.io/1226/coding-style).
+When contributing, please follow the guidelines from the [Package Coding Style](https://docs.dagger.io/1226/coding-style).
 
 ## TODO LIST
 
