@@ -6,14 +6,6 @@ package handler
 import (
 	"github.com/dagger/daggerlsp/workspace"
 	protocol "github.com/tliron/glsp/protocol_3_16"
-	"github.com/tliron/kutil/logging"
-)
-
-type Mode int
-
-const (
-	DEV Mode = iota
-	PROD
 )
 
 // Handler is the storage for any handler of the server.LSP.
@@ -23,23 +15,20 @@ type Handler struct {
 
 	handler *protocol.Handler
 
-	log logging.Logger
+	log Logger
 
 	lsName string
 
 	lsVersion string
-
-	mode Mode
 }
 
 // New creates a Handler instance that contains all methods supported by
 // the LSP
-func New(lsName, lsVersion string, log logging.Logger, mode Mode) *Handler {
+func New(lsName, lsVersion string, log Logger, mode ServerMode) *Handler {
 	h := &Handler{
 		lsName:    lsName,
 		lsVersion: lsVersion,
-		log:       logging.NewScopeLogger(log, "workspace"),
-		mode:      mode,
+		log:       log,
 	}
 
 	h.handler = &protocol.Handler{
