@@ -8,8 +8,5 @@ const (
 )
 
 func (m Mode) IsProd() bool {
-	if m == ModeProd {
-		return true
-	}
-	return false
+	return m == ModeProd
 }
