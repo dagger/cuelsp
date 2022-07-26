@@ -7,7 +7,10 @@ import (
 )
 
 func main() {
-	s, err := server.New(server.ModeDev)
+	s, err := server.New(
+		server.WithMode(server.ModeDev),
+		server.WithDebug(true),
+	)
 	if err != nil {
 		panic(err)
 	}

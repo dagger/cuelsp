@@ -24,11 +24,11 @@ type Handler struct {
 
 // New creates a Handler instance that contains all methods supported by
 // the LSP
-func New(lsName, lsVersion string, log Logger, mode ServerMode) *Handler {
-	h := &Handler{
-		lsName:    lsName,
-		lsVersion: lsVersion,
-		log:       log,
+func New(opts ...Options) *Handler {
+	h := &Handler{}
+
+	for _, opt := range opts {
+		opt(h)
 	}
 
 	h.handler = &protocol.Handler{
