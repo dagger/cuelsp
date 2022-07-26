@@ -4,8 +4,6 @@
 package server
 
 import (
-	"errors"
-
 	"github.com/dagger/daggerlsp/server/handler"
 	"github.com/tliron/glsp/server"
 	"github.com/tliron/kutil/logging"
@@ -18,40 +16,43 @@ type LSP struct {
 	server *server.Server
 
 	log logging.Logger
+
+	mode Mode
+
+	debug bool
 }
 
 const (
 	Name    = "daggerlsp"
-	Version = "0.0.1"
+	Version = "0.3.3"
 )
 
 // New initializes a new language protocol server that contains his logger
 // and his handler
-func New(mode Mode) (*LSP, error) {
-	// This increases logging verbosity (optional)
-	// logTo := "/tmp/daggerlsp.log"
-	// logging.Configure(2, &logTo)
-	switch mode {
-	case ModeDev:
-		logging.Configure(2, nil)
-	case ModeProd:
-		logging.Configure(0, nil)
-	default:
-		return nil, errors.New("unknown logging mode")
+func New(opts ...Options) (*LSP, error) {
+	lsp := &LSP{}
+
+	for _, opt := range opts {
+		opt(lsp)
 	}
 
 	baseLog := logging.GetLogger(Name)
 	log := handler.Logger{
 		Logger:     logging.NewScopeLogger(baseLog, "workspace"),
-		ServerMode: mode,
+		ServerMode: lsp.mode,
 	}
 
-	h := handler.New(Name, Version, log, mode)
-	return &LSP{
-		log:     log,
-		handler: h,
-		server:  server.NewServer(h.Handler(), Name, false),
-	}, nil
+	lsp.log = log
+
+	lsp.handler = handler.New(
+		handler.WithName(Name),
+		handler.WithVersion(Version),
+		handler.WithLogger(log),
+	)
+
+	lsp.server = server.NewServer(lsp.handler.Handler(), Name, lsp.debug)
+
+	return lsp, nil
 }
 
 // Run will start the server
