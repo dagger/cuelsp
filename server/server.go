@@ -4,7 +4,7 @@
 package server
 
 import (
-	"github.com/dagger/daggerlsp/server/handler"
+	"github.com/dagger/cuelsp/server/handler"
 	"github.com/tliron/glsp/server"
 	"github.com/tliron/kutil/logging"
 )

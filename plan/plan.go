@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/dagger/daggerlsp/file"
-	"github.com/dagger/daggerlsp/internal"
-	"github.com/dagger/daggerlsp/loader"
+	"github.com/dagger/cuelsp/file"
+	"github.com/dagger/cuelsp/internal"
+	"github.com/dagger/cuelsp/loader"
 	"github.com/tliron/kutil/logging"
 )
 

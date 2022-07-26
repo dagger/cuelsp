@@ -1,33 +1,28 @@
-# Dagger LSP
+# CUE LSP
 
-Language Server implementation for [Dagger](https://github.com/dagger/dagger).
+Language Server implementation for [CUE](https://cuelang.org), with built-in support for [Dagger](https://dagger.io).
 
 ## Install
 
-Dagger LSP is a subcommand on the Dagger CLI: `dagger lsp`
+CUE LSP can be used in one of two ways:
 
-Ensure that you have `dagger v0.2.26` or newer installed. [This is how you can install `dagger`](https://docs.dagger.io/install).
-
-### Standalone binary
-
-In case you need a stand-alone binary you can install it locally by using
-`go install github.com/dagger/daggerlsp/cmd/dagger_cue_lsp@latest`
-
+* As a standalone binary `cuelsp`: `go install github.com/dagger/cuelsp/cmd/cuelsp@latest`
+* As a subcommand of the Dagger CLI: `dagger cuelsp`. This requires [dagger v0.2.27 or later](https://docs.dagger.io/install).
 
 ## Configure your code editor
 
 | Code Editor |                    Documentation                     |
 |:-----------:|:----------------------------------------------------:|
-|   VS Code   | [Extension](https://github.com/dagger/vscode-dagger) |
+|   VS Code   | [Extension](https://marketplace.visualstudio.com/items?itemName=Dagger.dagger) |
 |     Vim     |                [Guide](./docs/vim.md)                |
 
 ### Capabilities
 
 | Feature                 | Supported          | Link to documentation                     |
 |-------------------------|--------------------|-------------------------------------------|
-| Load cue plan           | :white_check_mark: | [how dagger lsp load CUE](./docs/load.md) |
-| Load multiples files    | :white_check_mark: | [how dagger lsp load CUE](./docs/load.md) |
-| Jump to CUE definition  | :white_check_mark: | [manage jump-to](./docs/jump-to.md)       |
+| Load cue plan           | :white_check_mark: | [how cuelsp loads CUE](./docs/load.md) |
+| Load multiples files    | :white_check_mark: | [how cuelsp loads CUE](./docs/load.md) |
+| Jump to CUE definition  | :white_check_mark: | [managing jump-to](./docs/jump-to.md)       |
 | Doc Hover               | :white_check_mark: |                                           |
 | Syntax highlighting     | :hourglass:        |                                           |
 | Auto completion         | :no_entry_sign:    |                                           |
@@ -38,7 +33,7 @@ In case you need a stand-alone binary you can install it locally by using
 
 ### Development & CI
 
-Current CI is using [Dagger](https://dagger.io) to lint, test and build the LSP. Using Dagger, commands running in the
+We use [Dagger](https://dagger.io) to lint, test and build CUELSP. Using Dagger, commands running in the
 CI behave the same as on your local system :rocket:
 
 | Action       | Command           |
@@ -52,9 +47,9 @@ CI behave the same as on your local system :rocket:
 
 ### Release
 
-Dagger LSP is versioned through tagged release.
+CUELSP is versioned through tagged release.
 
-There is a complete [release workflow](./.github/workflows/release.yaml) to populate Dagger LSP binary in multiple
+There is a complete [release workflow](./.github/workflows/release.yaml) to produce CUELSP binaries for multiple
 platforms.
 
 To publish a new release, we just create a new tag.

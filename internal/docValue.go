@@ -7,7 +7,7 @@ import (
 
 	"cuelang.org/go/cue/ast"
 	"cuelang.org/go/cue/format"
-	"github.com/dagger/daggerlsp/loader"
+	"github.com/dagger/cuelsp/loader"
 )
 
 type DocValue struct {

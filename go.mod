@@ -1,4 +1,4 @@
-module github.com/dagger/daggerlsp
+module github.com/dagger/cuelsp
 
 go 1.17
 

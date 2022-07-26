@@ -4,7 +4,7 @@
 package handler
 
 import (
-	"github.com/dagger/daggerlsp/workspace"
+	"github.com/dagger/cuelsp/workspace"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 

@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/dagger/daggerlsp/loader"
+	"github.com/dagger/cuelsp/loader"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 	"go.lsp.dev/uri"
 )
