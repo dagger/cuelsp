@@ -1,6 +1,7 @@
 project_name: cuelsp
 
 builds:
+  - main: ./cmd/cuelsp/
   - id: darwin-amd64
     env:
       - CGO_ENABLED=1
