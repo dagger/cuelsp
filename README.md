@@ -42,7 +42,7 @@ CI behave the same as on your local system :rocket:
 | Run test     | `dagger do test`  |
 | Build binary | `dagger do build` |
 
-> If you are on Mac M1, you should build binary using `go build -o daggerlsp` because Buildkit
+> If you are on Mac M1, you should build binary using `go build -o cuelsp` because Buildkit
 > does not support `darwin/arm64` platform, yet.
 
 ### Release

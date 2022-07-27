@@ -23,8 +23,8 @@ type LSP struct {
 }
 
 const (
-	Name    = "daggerlsp"
-	Version = "0.3.3"
+	Name    = "cuelsp"
+	Version = "0.3.4"
 )
 
 // New initializes a new language protocol server that contains his logger
