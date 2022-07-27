@@ -1,8 +1,8 @@
-## 1/4. Install `dagger` >= 0.2.26
+## 1/4. Install `dagger` >= 0.2.27
 
-Dagger LSP is a subcommand on the Dagger CLI: `dagger lsp`
+CUELSP is available as a subcommand of the Dagger CLI: `dagger cuelsp`
 
-Ensure that you have `dagger` **v0.2.26** or newer installed.
+Ensure that you have `dagger` **v0.2.27** or newer installed.
 [This is how you can install `dagger`](https://docs.dagger.io/install).
 
 To check what version you have installed, run: `dagger version`
@@ -21,7 +21,7 @@ Add this to your `.vimrc`:
 if executable('dagger')
   au User lsp_setup call lsp#register_server({
       \ 'name': 'dagger_cue_lsp',
-      \ 'cmd': {server_info->['dagger', 'lsp']},
+      \ 'cmd': {server_info->['dagger', 'cuelsp']},
       \ 'allowlist': ['cue'],
       \ })
 endif

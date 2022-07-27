@@ -32,7 +32,7 @@ dagger.#Plan & {
 
 		build: go.#Build & {
 			source:  _code
-			package: "github.com/dagger/daggerlsp/cmd/dagger_cue_lsp"
+			package: "github.com/dagger/cuelsp/cmd/cuelsp"
 		}
 
 		test: {

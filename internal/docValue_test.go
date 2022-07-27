@@ -3,7 +3,7 @@ package internal_test
 import (
 	"testing"
 
-	"github.com/dagger/daggerlsp/plan"
+	"github.com/dagger/cuelsp/plan"
 	"github.com/stretchr/testify/assert"
 )
 

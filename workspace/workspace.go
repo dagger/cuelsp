@@ -3,7 +3,7 @@ package workspace
 import (
 	"path/filepath"
 
-	"github.com/dagger/daggerlsp/plan"
+	"github.com/dagger/cuelsp/plan"
 	"github.com/tliron/kutil/logging"
 )
 
