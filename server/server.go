@@ -24,7 +24,7 @@ type LSP struct {
 
 const (
 	Name    = "cuelsp"
-	Version = "0.3.4"
+	Version = "0.3.3"
 )
 
 // New initializes a new language protocol server that contains his logger
