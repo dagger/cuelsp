@@ -3,50 +3,30 @@ project_name: cuelsp
 builds:
   - id: darwin-amd64
     main: ./cmd/cuelsp/
-    env:
-      - CGO_ENABLED=1
-      - CC=o64-clang
-      - CCX=o64-clang++
     goos:
       - darwin
     goarch:
       - amd64
   - id: darwin-arm64
     main: ./cmd/cuelsp/
-    env:
-      - CGO_ENABLED=1
-      - CC=oa64-clang
-      - CCX=oa64-clang++
     goos:
       - darwin
     goarch:
       - arm64
   - id: linux-arm64
     main: ./cmd/cuelsp/
-    env:
-      - CGO_ENABLED=1
-      - CC=aarch64-linux-gnu-gcc
-      - CCX=aarch64-linux-gnu-g++
     goos:
       - linux
     goarch:
       - arm64
   - id: linux-amd64
     main: ./cmd/cuelsp/
-    env:
-      - CGO_ENABLED=1
-      - CC=gcc
-      - CCX=g++
     goos:
       - linux
     goarch:
       - amd64
   - id: windows-amd64
     main: ./cmd/cuelsp/
-    env:
-      - CGO_ENABLED=1
-      - CC=x86_64-w64-mingw32-gcc
-      - CCX=x86_64-w64-mingw32-g++
     goos:
       - windows
     goarch:
