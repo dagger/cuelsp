@@ -1,6 +1,7 @@
 package plan
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 	"sync"
@@ -143,7 +144,9 @@ func (p *Plan) GetDefinition(path string, line, char int) (*loader.Value, error)
 	} else {
 		i, found := p.imports[def.Pkg()]
 		if !found {
-			return nil, fmt.Errorf("imported package %s not registered in plan", def.Def())
+			if i, err = p.findInstanceAlias(path, def.Pkg()); err != nil {
+				return nil, fmt.Errorf("imported package %s not registered in plan", def.Def())
+			}
 		}
 
 		return i.GetDefinition(def.Def())
@@ -186,11 +189,36 @@ func (p *Plan) GetInstance(path string, line, char int) (*loader.Instance, error
 	} else {
 		i, found := p.imports[def.Pkg()]
 		if !found {
-			return nil, fmt.Errorf("imported package %s not registered in plan", def.Def())
+			if i, err = p.findInstanceAlias(path, def.Pkg()); err != nil {
+				return nil, fmt.Errorf("imported package %s not registered in plan", def.Def())
+			}
 		}
 
 		return i, nil
 	}
+}
+
+// findInstanceAlias returns the instance of a package alias
+func (p *Plan) findInstanceAlias(path string, pkgAlias string) (*loader.Instance, error) {
+	p.log.Debugf("Looking for pkg alias: %s", pkgAlias)
+
+	p.muFiles.RLock()
+	defer p.muFiles.RUnlock()
+
+	f, ok := p.files[path]
+	if !ok {
+		return nil, fmt.Errorf("file not registered")
+	}
+
+	if importPath, ok := f.AliasImportPath(pkgAlias); ok {
+		for _, i := range p.imports {
+			if i.ImportPath == importPath {
+				return i, nil
+			}
+		}
+		return nil, fmt.Errorf("no instance found for %s", importPath)
+	}
+	return nil, errors.New("not an alias")
 }
 
 func (p *Plan) findDefInFile(path string, line, char int) (*internal.Definition, error) {
@@ -243,7 +271,9 @@ func (p *Plan) GetDoc(path string, line, char int) (*loader.Value, error) {
 	} else {
 		i, found := p.imports[_def.Pkg()]
 		if !found {
-			return nil, fmt.Errorf("imported package %s not registered in plan", _def.Def())
+			if i, err = p.findInstanceAlias(path, _def.Pkg()); err != nil {
+				return nil, fmt.Errorf("imported package %s not registered in plan", _def.Def())
+			}
 		}
 
 		return i.GetValue()

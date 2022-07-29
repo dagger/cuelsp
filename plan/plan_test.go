@@ -52,7 +52,8 @@ func TestNew(t *testing.T) {
 				RootFilePath: "main.cue",
 				Kind:         File,
 				imports: map[string]*loader.Instance{
-					"test": nil,
+					"test":  nil,
+					"test2": nil,
 				},
 			},
 		},
@@ -176,22 +177,22 @@ func TestPlan_GetDefinition(t *testing.T) {
 			defs: []Def{
 				{
 					path: "_#TestName",
-					line: 7,
+					line: 8,
 					char: 1,
 				},
 				{
 					path: "#Test",
-					line: 9,
+					line: 10,
 					char: 9,
 				},
 				{
 					path: "_#TestName",
-					line: 15,
+					line: 16,
 					char: 12,
 				},
 				{
 					path: "#Test",
-					line: 14,
+					line: 15,
 					char: 15,
 				},
 			},
@@ -365,19 +366,19 @@ func TestPlan_GetInstance(t *testing.T) {
 			file: "main.cue",
 			defs: []Def{
 				{
-					line: 7,
+					line: 8,
 					char: 1,
 				},
 				{
-					line: 9,
+					line: 10,
 					char: 9,
 				},
 				{
-					line: 15,
+					line: 16,
 					char: 12,
 				},
 				{
-					line: 14,
+					line: 15,
 					char: 15,
 				},
 			},
@@ -500,7 +501,8 @@ func TestPlan_Reload(t *testing.T) {
 				RootFilePath: "main.cue",
 				Kind:         File,
 				imports: map[string]*loader.Instance{
-					"test": nil,
+					"test":  nil,
+					"test2": nil,
 				},
 			},
 		},

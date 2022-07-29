@@ -3,6 +3,7 @@ package parser
 import (
 	"fmt"
 	"sort"
+	"strconv"
 
 	"cuelang.org/go/cue/ast"
 	"cuelang.org/go/cue/token"
@@ -54,7 +55,7 @@ func (def Definitions) Find(line int, column int) (string, error) {
 // - Ident: those are definitions from the package itself
 // - SelectorExpr: those are definitions from external package
 // they will be stored as <pkg>.<def> (E.g., foo.#Bar)
-func ParseDefs(defs *Definitions, f *ast.File) {
+func ParseDefs(defs *Definitions, importAliases map[string]string, f *ast.File) {
 	ast.Walk(f, func(node ast.Node) bool {
 		switch v := node.(type) {
 		// case: #Def
@@ -75,7 +76,14 @@ func ParseDefs(defs *Definitions, f *ast.File) {
 				defs.AppendRange(definitionName, pkg.Pos(), v.Sel.End())
 				return false
 			}
+
+		case *ast.ImportSpec:
+			if v.Name != nil {
+				importPath, _ := strconv.Unquote(v.Path.Value)
+				importAliases[v.Name.String()] = importPath
+			}
 		}
+
 		return true
 	}, nil)
 }
