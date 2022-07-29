@@ -56,8 +56,10 @@ func customerFormatNode(node ast.Node, depth int) string {
 			return formatNode(n)
 		case *ast.StructLit:
 			return fmt.Sprintf("%s: %s", n.Label, formatNode(v))
+		case *ast.BasicLit:
+			return fmt.Sprintf("%s: %s", n.Label, formatNode(v))
 		default:
-			doc += fmt.Sprintf("%s: {TEST\n%s}", n.Label, customerFormatNode(v, depth+1))
+			doc += fmt.Sprintf("%s: {\n%s}", n.Label, customerFormatNode(v, depth+1))
 		}
 	case *ast.StructLit:
 		for _, d := range n.Elts {
