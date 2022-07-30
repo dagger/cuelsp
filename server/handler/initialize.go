@@ -1,13 +1,18 @@
 package handler
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/dagger/cuelsp/server/utils"
 	"github.com/dagger/cuelsp/workspace"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 	"go.lsp.dev/uri"
+)
+
+var (
+	ErrNoWorkspaceFound = errors.New("no workspace found. Please open a folder instead of a single file")
+	ErrMultiWorkspace   = errors.New("multiple workspace found. Please open a single workspace")
 )
 
 // initialize the language server with his capabilities and the user's workspace.
@@ -21,6 +26,9 @@ func (h *Handler) initialize(_ *glsp.Context, params *protocol.InitializeParams)
 	}
 
 	if err := h.initWorkspace(params.WorkspaceFolders, params.RootURI, params.RootPath); err != nil {
+		if errors.Is(err, ErrNoWorkspaceFound) || errors.Is(err, ErrMultiWorkspace) {
+			return nil, err
+		}
 		return nil, h.wrapError(err)
 	}
 
@@ -45,7 +53,7 @@ func (h *Handler) initWorkspace(workspaceFolders []protocol.WorkspaceFolder, roo
 		case rootPath != nil:
 			path = *rootPath
 		default:
-			return fmt.Errorf("no workspace folder found")
+			return ErrNoWorkspaceFound
 		}
 
 		_uri, err := uri.Parse(path)
@@ -64,7 +72,7 @@ func (h *Handler) initWorkspace(workspaceFolders []protocol.WorkspaceFolder, roo
 
 		return nil
 	default:
-		return fmt.Errorf("multiple workspace not supported")
+		return ErrMultiWorkspace
 	}
 }
 
