@@ -42,6 +42,7 @@ func New(opts ...Options) *Handler {
 		TextDocumentHover:      h.documentHover,
 		TextDocumentDidChange:  h.documentDidChange,
 		TextDocumentDidClose:   h.documentDidClose,
+		TextDocumentFormatting: h.documentFormatting,
 	}
 
 	return h

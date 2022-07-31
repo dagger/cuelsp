@@ -99,5 +99,8 @@ func (h *Handler) capabilities() protocol.ServerCapabilities {
 	capabilities.DefinitionProvider = true
 	capabilities.HoverProvider = true
 
+	// Formatting
+	capabilities.DocumentFormattingProvider = true
+
 	return capabilities
 }
