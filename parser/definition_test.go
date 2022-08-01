@@ -116,7 +116,8 @@ func TestDefinitionParsing(t *testing.T) {
 			}
 
 			defs := Definitions{}
-			ParseDefs(&defs, f)
+			importAliases := make(map[string]string)
+			ParseDefs(&defs, importAliases, f)
 			output := defs.String()
 			for _, o := range tc.output {
 				require.Contains(t, output, o)
@@ -177,7 +178,8 @@ func TestFindDefinition(t *testing.T) {
 			}
 
 			defs := Definitions{}
-			ParseDefs(&defs, f)
+			importAliases := make(map[string]string)
+			ParseDefs(&defs, importAliases, f)
 
 			name, err := defs.Find(tc.input.line, tc.input.col)
 			if err != nil {
