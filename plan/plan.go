@@ -25,6 +25,9 @@ type Plan struct {
 	// files store the loaded files.
 	files map[string]*file.File
 
+	// overrides store the override content of files.
+	overrides map[string][]byte
+
 	// Kind stores Plan's Kind.
 	Kind Kind
 
@@ -67,7 +70,7 @@ func New(root, filePath string) (*Plan, error) {
 		return nil, err
 	}
 
-	f, err := file.New(filepath.Join(root, filePath))
+	f, err := file.New(filepath.Join(root, filePath), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +83,7 @@ func New(root, filePath string) (*Plan, error) {
 		rootPath:     root,
 		RootFilePath: filePath,
 		files:        files,
+		overrides:    map[string][]byte{},
 		Kind:         k,
 		instance:     i,
 		v:            v,
@@ -116,7 +120,7 @@ func (p *Plan) loadImports() error {
 
 func (p *Plan) loadFiles() error {
 	for path := range p.files {
-		f, err := file.New(filepath.Join(p.rootPath, path))
+		f, err := file.New(filepath.Join(p.rootPath, path), p.overrides[path])
 		if err != nil {
 			return err
 		}
@@ -297,7 +301,7 @@ func (p *Plan) Reload() error {
 func (p *Plan) AddFile(path string) error {
 	p.log.Debugf("Add a new file to plan: %s", path)
 
-	f, err := file.New(filepath.Join(p.rootPath, path))
+	f, err := file.New(filepath.Join(p.rootPath, path), nil)
 	if err != nil {
 		return err
 	}
@@ -306,4 +310,13 @@ func (p *Plan) AddFile(path string) error {
 	p.muFiles.Unlock()
 
 	return nil
+}
+
+// AddOverride add content as an override for the file
+func (p *Plan) AddOverride(path string, content []byte) {
+	p.log.Debugf("Add a new override to plan: %s", path)
+
+	p.muFiles.Lock()
+	p.overrides[path] = content
+	p.muFiles.Unlock()
 }
