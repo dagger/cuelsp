@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) documentDidChange(_ *glsp.Context, params *protocol.DidChangeTextDocumentParams) error {
-	h.log.Debugf("Document saved")
+	h.log.Debugf("Document changed")
 	h.log.Debugf("params: %#v", params)
 
 	_uri, err := uri.Parse(params.TextDocument.URI)

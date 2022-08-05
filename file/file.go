@@ -23,7 +23,7 @@ type File struct {
 
 // New create a File and analise CUE ast in it.
 func New(path string, src interface{}) (*File, error) {
-	content, err := cueparser.ParseFile(path, src)
+	content, err := cueparser.ParseFile(path, src, cueparser.ParseComments)
 	if err != nil {
 		return nil, err
 	}
