@@ -4,8 +4,7 @@ import (
 	"dagger.io/dagger"
 
 	"universe.dagger.io/go"
-
-	"tom.chauveau.pro@icloud.com/golangci"
+	"universe.dagger.io/alpha/go/golangci"
 )
 
 dagger.#Plan & {
