@@ -4,8 +4,7 @@ import (
 	"dagger.io/dagger"
 
 	"universe.dagger.io/go"
-
-	"tom.chauveau.pro@icloud.com/golangci"
+	"universe.dagger.io/alpha/go/golangci"
 )
 
 dagger.#Plan & {
@@ -46,7 +45,7 @@ dagger.#Plan & {
 			}
 
 			coverage: go.#Container & {
-				input:  test.output
+				image:  test.output
 				source: _code
 				command: {
 					name: "sh"
