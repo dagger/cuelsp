@@ -45,7 +45,7 @@ dagger.#Plan & {
 			}
 
 			coverage: go.#Container & {
-				input:  test.output
+				image:  test.output
 				source: _code
 				command: {
 					name: "sh"
